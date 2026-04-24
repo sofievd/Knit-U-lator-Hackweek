@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
+import { Layout } from "../components/Layout";
 
 import appCss from "../styles.css?url";
 
@@ -40,7 +41,9 @@ function RootComponent() {
         <HeadContent />
       </head>
       <body>
+        <Layout>
         <Outlet />
+        </Layout>
 
         <TanStackDevtools
           config={{

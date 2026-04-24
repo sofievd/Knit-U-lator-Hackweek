@@ -9,9 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MyPatternsRouteImport } from './routes/my-patterns'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PatternIdRouteImport } from './routes/pattern.$id'
+import { Route as CategoryTypeRouteImport } from './routes/category.$type'
+import { Route as CreateTypePatternRouteImport } from './routes/create.$type.$pattern'
 
+const MyPatternsRoute = MyPatternsRouteImport.update({
+  id: '/my-patterns',
+  path: '/my-patterns',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -22,35 +31,92 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PatternIdRoute = PatternIdRouteImport.update({
+  id: '/pattern/$id',
+  path: '/pattern/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoryTypeRoute = CategoryTypeRouteImport.update({
+  id: '/category/$type',
+  path: '/category/$type',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateTypePatternRoute = CreateTypePatternRouteImport.update({
+  id: '/create/$type/$pattern',
+  path: '/create/$type/$pattern',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/my-patterns': typeof MyPatternsRoute
+  '/category/$type': typeof CategoryTypeRoute
+  '/pattern/$id': typeof PatternIdRoute
+  '/create/$type/$pattern': typeof CreateTypePatternRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/my-patterns': typeof MyPatternsRoute
+  '/category/$type': typeof CategoryTypeRoute
+  '/pattern/$id': typeof PatternIdRoute
+  '/create/$type/$pattern': typeof CreateTypePatternRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/my-patterns': typeof MyPatternsRoute
+  '/category/$type': typeof CategoryTypeRoute
+  '/pattern/$id': typeof PatternIdRoute
+  '/create/$type/$pattern': typeof CreateTypePatternRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/my-patterns'
+    | '/category/$type'
+    | '/pattern/$id'
+    | '/create/$type/$pattern'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/my-patterns'
+    | '/category/$type'
+    | '/pattern/$id'
+    | '/create/$type/$pattern'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/my-patterns'
+    | '/category/$type'
+    | '/pattern/$id'
+    | '/create/$type/$pattern'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  MyPatternsRoute: typeof MyPatternsRoute
+  CategoryTypeRoute: typeof CategoryTypeRoute
+  PatternIdRoute: typeof PatternIdRoute
+  CreateTypePatternRoute: typeof CreateTypePatternRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/my-patterns': {
+      id: '/my-patterns'
+      path: '/my-patterns'
+      fullPath: '/my-patterns'
+      preLoaderRoute: typeof MyPatternsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -65,12 +131,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pattern/$id': {
+      id: '/pattern/$id'
+      path: '/pattern/$id'
+      fullPath: '/pattern/$id'
+      preLoaderRoute: typeof PatternIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/category/$type': {
+      id: '/category/$type'
+      path: '/category/$type'
+      fullPath: '/category/$type'
+      preLoaderRoute: typeof CategoryTypeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create/$type/$pattern': {
+      id: '/create/$type/$pattern'
+      path: '/create/$type/$pattern'
+      fullPath: '/create/$type/$pattern'
+      preLoaderRoute: typeof CreateTypePatternRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  MyPatternsRoute: MyPatternsRoute,
+  CategoryTypeRoute: CategoryTypeRoute,
+  PatternIdRoute: PatternIdRoute,
+  CreateTypePatternRoute: CreateTypePatternRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

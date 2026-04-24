@@ -1,0 +1,158 @@
+function RouteComponent({ sections }: { sections: PatternSection[] }) {
+  const navigate = useNavigate()
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [patternName, setPatternName] = useState('My Pattern')
+  const [notes, setNotes] = useState('')
+  const [currentRow, setCurrentRow] = useState(1)
+  const [completedSteps, setCompletedSteps] = useState<{ [key: string]: boolean }>({})
+  const [expandedExplanations, setExpandedExplanations] = useState<{ [key: string]: boolean }>({})
+
+  function toggleStepCompletion(stepId: string) {
+    setCompletedSteps((prev) => ({
+      ...prev,
+      [stepId]: !prev[stepId],
+    }))
+  }
+
+  function toggleExplanation(stepId: string) {
+    setExpandedExplanations((prev) => ({
+      ...prev,
+      [stepId]: !prev[stepId],
+    }))
+  }
+
+  function calculateProgress(steps: PatternStep[]) {
+    const completed = steps.filter((step) => completedSteps[step.id]).length
+    return {
+      completed,
+      total: steps.length,
+    }
+  }
+
+  function getStepClassName(stepId: string) {
+    return completedSteps[stepId] ? 'opacity-80' : ''
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 flex-1">
+          <button
+            onClick={() => navigate({ to: "/" })}
+            className="p-2 hover:bg-accent rounded-lg transition-colors"
+          >
+            
+          </button>
+          {isEditingName ? (
+            <input
+              type="text"
+              value={patternName}
+              onChange={(e) => setPatternName(e.target.value)}
+              onBlur={() => setIsEditingName(false)}
+              autoFocus
+              className="text-2xl px-3 py-1 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          ) : (
+            <h1 className="text-foreground">{patternName}</h1>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsEditingName(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors"
+          >
+          
+            Edit
+          </button>
+          <button
+        
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+          >
+            Save
+          </button>
+          <button
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive text-destructive hover:bg-destructive/10 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-card rounded-xl shadow-sm border border-border p-8 space-y-8">
+        {sections.map((section) => {
+          const progress = calculateProgress(section.steps);
+          return (
+            <div key={section.name} className={section.name !== "Cuff" ? "border-t border-border pt-6" : ""}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-primary">{section.name}</h2>
+                <span className="text-sm text-muted-foreground">
+                  {progress.completed}/{progress.total} completed
+                </span>
+              </div>
+              <div className="space-y-3">
+                {section.steps.map((step) => (
+                  <div key={step.id}>
+                    <div className={`flex items-start gap-3 ${getStepClassName(step.id)}`}>
+                      <input
+                        type="checkbox"
+                        checked={completedSteps[step.id] || false}
+                        onChange={() => toggleStepCompletion(step.id)}
+                        className="mt-1 w-4 h-4 rounded border-border accent-primary cursor-pointer"
+                      />
+                      <div className="flex-1 space-y-2">
+                        <p className={`text-foreground leading-relaxed ${completedSteps[step.id] ? "line-through" : ""}`}>
+                          {step.text}
+                        </p>
+                        <button
+                          onClick={() => toggleExplanation(step.id)}
+                          className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+                        >
+                          {expandedExplanations[step.id] ? "Hide explanation" : "Why this step?"}
+                        </button>
+                        {expandedExplanations[step.id] && (
+                          <div className="bg-accent/50 border border-border rounded-lg p-3 text-sm text-muted-foreground leading-relaxed">
+                            {step.explanation}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-foreground">Row {currentRow}</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setCurrentRow(Math.max(1, currentRow - 1))}
+              className="p-2 hover:bg-accent rounded-lg transition-colors"
+            >
+            </button>
+            <button
+              onClick={() => setCurrentRow(currentRow + 1)}
+              className="p-2 hover:bg-accent rounded-lg transition-colors"
+            >
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-foreground">Notes</h3>
+        </div>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Add note..."
+          className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring min-h-30 resize-y"
+        />
+      </div>
+    </div>
+  )
+}
