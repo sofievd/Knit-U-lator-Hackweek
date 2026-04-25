@@ -1,16 +1,19 @@
 import {
-  HeadContent,
   Outlet,
-  Scripts,
-  createRootRoute,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { Layout } from "../components/Layout";
+import react from 'react'
 
 import "../styles.css";
 
-export const Route = createRootRoute({
+interface MyRouterContext {
+  queryClient: QueryClient
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
 });
 
@@ -32,7 +35,6 @@ function RootComponent() {
           },
         ]}
       />
-      <Scripts />
     </>
   );
 }

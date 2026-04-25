@@ -1,7 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
+import react from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import PatternView from '../components/PatternView'
+import { patternQueries } from '../util/queryOptions'
 
 const defaultSections: PatternSection[] = [
   {
@@ -22,13 +24,10 @@ export const Route = createFileRoute('/pattern/$id')({
   component: PatternView,
 
   // 2. The Loader (Optional but recommended)
-  // This runs BEFORE the component renders
-  //loader: async ({ params }) => {
-    // You can fetch your pattern data here
-    // const data = await fetchPatternById(params.id)
-    // return data
-    //return { patternId: params.id }
-  //},
+// Access the queryClient we put in the context earlier (in main.tsx)
+  loader: ({ context: { queryClient }, params: { id } }) =>
+    queryClient.ensureQueryData(patternQueries.detail(id)),
+
 
   // 3. Error State (Optional)
   // Shown if the loader fails or something breaks
@@ -36,7 +35,7 @@ export const Route = createFileRoute('/pattern/$id')({
   
   // 4. Pending State (Optional)
   // Shown if the loader takes a long time
-  pendingComponent: () => <div>Loading pattern...</div>,
+  pendingComponent: () => <div>Loading pattern...</div>
 })
 
 
