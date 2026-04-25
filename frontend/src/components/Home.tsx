@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Sparkles, FileText, Save } from "lucide-react";
+import react from 'react'
 
 export  function Home() {
   const categories = [

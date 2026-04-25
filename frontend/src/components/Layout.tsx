@@ -1,5 +1,6 @@
 import { Outlet, Link } from "@tanstack/react-router";
 import { User, LogOut } from "lucide-react";
+import react from 'react'
 
 export function Layout() {
   return (

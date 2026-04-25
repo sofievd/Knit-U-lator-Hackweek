@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
+import react from 'react'
 
 interface PatternType {
   id: string;

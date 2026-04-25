@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, react } from "react";
 
 export  function PatternInput() {
   const navigate = useNavigate();
