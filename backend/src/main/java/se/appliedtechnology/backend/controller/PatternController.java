@@ -21,7 +21,7 @@ public class PatternController {
 
 	@PostMapping("/generate")
 	public PatternResponse generatePattern(@RequestBody SockPatternRequest request) {
-		return patternService.generatePattern(request);
+		return patternService.generateSockPattern(request);
 	}
 
 	@GetMapping
