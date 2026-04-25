@@ -4,38 +4,42 @@ import org.springframework.stereotype.Service;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SectionDto;
 import se.appliedtechnology.backend.dto.SockPatternRequest;
-import se.appliedtechnology.backend.dto.StepDto;
 import se.appliedtechnology.backend.entity.PatternTemplate;
 import se.appliedtechnology.backend.repository.PatternTemplateRepository;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PatternService {
 
-    private final PatternTemplateRepository repository;
+    private final PatternTemplateRepository templateRepository;
+    private final ParameterService parameterService;
+    private final TemplateRenderer renderer;
+    private final PatternBuilder builder;
 
-    public PatternService(PatternTemplateRepository repository) {
-        this.repository = repository;
+    public PatternService(PatternTemplateRepository repository, ParameterService parameterService, TemplateRenderer renderer, PatternBuilder builder) {
+        this.templateRepository = repository;
+        this.parameterService = parameterService;
+        this.renderer = renderer;
+        this.builder = builder;
     }
 
+    public PatternResponse generateSockPattern(SockPatternRequest request) {
+        List<PatternTemplate> templates = templateRepository.findByPatternTypeAndPatternVariantId("sock", 1);
 
-    public PatternResponse generatePattern(SockPatternRequest request) {
-        long stitchCount = Math.round(request.footCircumference() * request.gauge());
+        Map<String, Object> params = parameterService.generateSock(request);
+
+        List<SectionDto> sections = builder.build(templates, params, renderer);
+
+        return new PatternResponse("Basic sock", params, sections);
 
 
-        StepDto castOnStep = new StepDto(
-                "cuff-1",
-                "Cast on " + stitchCount + " stitches",
-                "This determines the width of the sock cuff"
-        );
-
-        SectionDto cuffSection = new SectionDto("Cuff", List.of(castOnStep));
-        return new PatternResponse(List.of(cuffSection));
     }
+
 
     public List<PatternTemplate> getTemplate() {
-        List<PatternTemplate> templates = repository.findByPatternTypeAndPatternVariantId("sock", 1);
+        List<PatternTemplate> templates = templateRepository.findByPatternTypeAndPatternVariantId("sock", 1);
         for (PatternTemplate template : templates) {
             System.out.println(template);
         }
