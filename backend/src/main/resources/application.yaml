@@ -3,10 +3,9 @@ spring:
     name: backend
   datasource:
     url: ${DB_CONNECTION_STRING}
-
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     defer-datasource-initialization: true
