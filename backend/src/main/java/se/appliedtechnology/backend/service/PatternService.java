@@ -1,52 +1,63 @@
 package se.appliedtechnology.backend.service;
 
+
 import org.springframework.stereotype.Service;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SectionDto;
-import se.appliedtechnology.backend.dto.SockPatternRequest;
-import se.appliedtechnology.backend.entity.PatternTemplate;
-import se.appliedtechnology.backend.repository.PatternTemplateRepository;
+import se.appliedtechnology.backend.entity.Pattern;
+import se.appliedtechnology.backend.exception.CouldNotSavePatternException;
+import se.appliedtechnology.backend.repository.PatternRepository;
+import tools.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+// saving and updating patterns
+//TODO: rename patternService
 
-// generating the pattern
-//TODO:rename GernatingService
 @Service
 public class PatternService {
+    private final PatternRepository patternRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final PatternTemplateRepository templateRepository;
-    private final ParameterService parameterService;
-    private final TemplateRenderer renderer;
-    private final PatternBuilder builder;
 
-    public PatternService(PatternTemplateRepository repository, ParameterService parameterService, TemplateRenderer renderer, PatternBuilder builder) {
-        this.templateRepository = repository;
-        this.parameterService = parameterService;
-        this.renderer = renderer;
-        this.builder = builder;
+    public PatternService(PatternRepository patternRepository) {
+        this.patternRepository = patternRepository;
     }
 
-    public PatternResponse generateSockPattern(SockPatternRequest request) {
-        List<PatternTemplate> templates = templateRepository.findByPatternTypeAndPatternVariantId("sock", 1);
+    public Pattern savePattern(String type, int patternVariantId, PatternResponse response) {
+        try {
+            Pattern pattern = new Pattern();
 
-        Map<String, Object> params = parameterService.generateSock(request);
+            pattern.setName(response.name());
+            pattern.setPatternType(type);
+            pattern.setPatternVariantId(patternVariantId);
 
-        List<SectionDto> sections = builder.build(templates, params, renderer);
+            pattern.setParameters(response.parameters());
+            pattern.setStructure(response.sections());
 
-        return new PatternResponse(request.name(), params, sections);
+            pattern.setCreatedAt(Instant.now());
 
+            return patternRepository.save(pattern);
 
-    }
-
-
-    public List<PatternTemplate> getTemplate() {
-        List<PatternTemplate> templates = templateRepository.findByPatternTypeAndPatternVariantId("sock", 1);
-        for (PatternTemplate template : templates) {
-            System.out.println(template);
+        } catch (Exception e) {
+            throw new CouldNotSavePatternException("Could not save the pattern", e);
         }
-        return templates;
     }
-}
 
+    public PatternResponse getById(UUID id) {
+        Pattern pattern = patternRepository.findById(id).orElseThrow(() -> new NoPatternFoundexception("pattern not found"));
+
+        Map<String, Object> params = pattern.getParameters();
+        List<SectionDto> sections = pattern.getStructure();
+
+        return new PatternResponse(
+                pattern.getName(),
+                params,
+                sections
+        );
+    }
+
+}
