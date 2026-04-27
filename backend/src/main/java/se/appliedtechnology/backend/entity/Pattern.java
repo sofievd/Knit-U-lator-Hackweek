@@ -5,10 +5,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import se.appliedtechnology.backend.dto.SectionDto;
-import tools.jackson.databind.JsonNode;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,7 +19,6 @@ public class Pattern {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "user_id")
     private UUID userId;
 
     @Column(nullable = false)
@@ -30,7 +27,7 @@ public class Pattern {
     @Column(nullable = false)
     private String patternType;
 
-    @Column(name = "pattern_variant_id", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private int patternVariantId;
 
     @Column(columnDefinition = "jsonb")
