@@ -48,7 +48,9 @@ public class PatternService {
     }
 
     public PatternResponse getById(UUID id) {
-        Pattern pattern = patternRepository.findById(id).orElseThrow(() -> new NoPatternFoundexception("pattern not found"));
+        Pattern pattern = patternRepository
+                .findById(id)
+                .orElseThrow(() -> new NoPatternFoundexception("pattern not found"));
 
         Map<String, Object> params = pattern.getParameters();
         List<SectionDto> sections = pattern.getStructure();
@@ -63,11 +65,21 @@ public class PatternService {
     public List<PatternResponse> getAll(){
         List<Pattern> patternList = patternRepository.findAll();
         // todo: check if the list is empty
-        List<PatternResponse> responses = patternList.stream().map((p) ->
+
+        return patternList.stream().map((p) ->
             new PatternResponse(p.getName(), p.getParameters(), p.getStructure())
         ).toList();
+    }
 
-        return responses;
+    public void deletePattern(UUID id){
+        if(!patternRepository.existsById(id)){
+            throw new NoPatternFoundexception("pattern not found");
+        }
+        Pattern pattern = patternRepository
+                .findById(id)
+                .orElseThrow(() -> new NoPatternFoundexception("pattern not found"));
+
+        patternRepository.delete(pattern);
     }
 
 }

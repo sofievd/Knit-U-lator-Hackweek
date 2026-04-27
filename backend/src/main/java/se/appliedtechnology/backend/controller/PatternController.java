@@ -53,5 +53,11 @@ public class PatternController {
         return patternService.getAll();
     }
 
+    @DeleteMapping ("/{id}")
+    public void deletePattern(@PathVariable String id){
+        UUID uuid = UUID.fromString(id);
+        patternService.deletePattern(uuid);
+    }
+
 }
 
