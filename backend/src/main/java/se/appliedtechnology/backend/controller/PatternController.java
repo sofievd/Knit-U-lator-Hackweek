@@ -27,7 +27,7 @@ public class PatternController {
     public PatternResponse generatePattern(@RequestBody SockPatternRequest request) {
 
        PatternResponse generatedPattern =  patternGeneratorService.generateSockPattern(request);
-        String name = (String) request.name();
+        String name = request.name();
 
        PatternResponse finalPattern = new PatternResponse(
                name != null ? name : generatedPattern.name(),
@@ -37,7 +37,7 @@ public class PatternController {
         return finalPattern;
     }
 
-    @GetMapping
+    @GetMapping("/template")
     public List<PatternTemplate> getTemplate() {
         return patternGeneratorService.getTemplate();
     }
@@ -46,6 +46,11 @@ public class PatternController {
     public PatternResponse getPattern(@PathVariable String id){
         UUID uuid = UUID.fromString(id);
        return patternService.getById(uuid);
+    }
+
+    @GetMapping
+    public List<PatternResponse> getAllPatterns(){
+        return patternService.getAll();
     }
 
 }

@@ -1,6 +1,5 @@
 package se.appliedtechnology.backend.service;
 
-
 import org.springframework.stereotype.Service;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SectionDto;
@@ -59,6 +58,16 @@ public class PatternService {
                 params,
                 sections
         );
+    }
+
+    public List<PatternResponse> getAll(){
+        List<Pattern> patternList = patternRepository.findAll();
+        // todo: check if the list is empty
+        List<PatternResponse> responses = patternList.stream().map((p) ->
+            new PatternResponse(p.getName(), p.getParameters(), p.getStructure())
+        ).toList();
+
+        return responses;
     }
 
 }
