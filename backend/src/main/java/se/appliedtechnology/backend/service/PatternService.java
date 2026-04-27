@@ -10,6 +10,9 @@ import se.appliedtechnology.backend.repository.PatternTemplateRepository;
 import java.util.List;
 import java.util.Map;
 
+
+// generating the pattern
+//TODO:rename GernatingService
 @Service
 public class PatternService {
 
@@ -32,7 +35,7 @@ public class PatternService {
 
         List<SectionDto> sections = builder.build(templates, params, renderer);
 
-        return new PatternResponse("Basic sock", params, sections);
+        return new PatternResponse(request.name(), params, sections);
 
 
     }
