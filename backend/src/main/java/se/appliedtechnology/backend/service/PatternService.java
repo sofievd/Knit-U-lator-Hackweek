@@ -6,6 +6,7 @@ import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SectionDto;
 import se.appliedtechnology.backend.entity.Pattern;
 import se.appliedtechnology.backend.exception.CouldNotSavePatternException;
+import se.appliedtechnology.backend.exception.NoPatternFoundexception;
 import se.appliedtechnology.backend.repository.PatternRepository;
 import tools.jackson.databind.ObjectMapper;
 
