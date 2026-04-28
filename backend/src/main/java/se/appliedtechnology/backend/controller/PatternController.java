@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SockPatternRequest;
+import se.appliedtechnology.backend.dto.ToggleRequest;
 import se.appliedtechnology.backend.dto.UpdatePatternRequest;
 import se.appliedtechnology.backend.entity.Pattern;
 import se.appliedtechnology.backend.entity.PatternTemplate;
@@ -33,6 +34,7 @@ public class PatternController {
     @PostMapping("/generate")
     public ResponseEntity<?> generatePattern(@RequestBody SockPatternRequest request, @AuthenticationPrincipal Jwt principal) {
 
+        System.out.println(principal.getId());
        Pattern generatedPattern =  patternGeneratorService.generateSockPattern(request);
        generatedPattern.setUserId(principal.getId());
 
@@ -65,7 +67,8 @@ public class PatternController {
 
     @GetMapping
     public ResponseEntity<?> getAllPatterns(@AuthenticationPrincipal Jwt principal){
-        List<PatternResponse> patterns =patternService.getAllFromUser(principal.getId());
+        System.out.println(principal.getId());
+        List<PatternResponse> patterns = patternService.getAllFromUser(principal.getId());
         return ResponseEntity.ok().body(patterns);
     }
 
@@ -86,11 +89,10 @@ public class PatternController {
     @PostMapping("/{id}/steps/toggle")
     public ResponseEntity<?> toggleStep(
             @PathVariable UUID id,
-            @RequestParam int sectionIndex,
-            @RequestParam int stepIndex,
+            @RequestBody ToggleRequest request,
             @AuthenticationPrincipal Jwt principal
     ) {
-        PatternResponse response = patternService.toggle(id, sectionIndex, stepIndex);
+        PatternResponse response = patternService.toggle(id, request.sectionIndex(), request.stepIndex());
         return ResponseEntity.ok().body(response);
     }
 

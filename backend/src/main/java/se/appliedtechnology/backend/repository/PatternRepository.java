@@ -1,6 +1,8 @@
 package se.appliedtechnology.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import se.appliedtechnology.backend.entity.Pattern;
 
@@ -12,5 +14,6 @@ public interface PatternRepository extends JpaRepository<Pattern, UUID> {
 
     Pattern save(Pattern pattern);
 
-    List<Pattern> findAllByUserId(String userId);
+    @Query("SELECT p FROM Pattern p WHERE p.userId = :userId")
+    List<Pattern> findAllByUserId(@Param("userId") String userId);
 }

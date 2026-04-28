@@ -72,4 +72,15 @@ public class PatternProgress {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
+
+    @Override
+    public String toString() {
+        return "PatternProgress{" +
+                "id=" + id +
+                ", patternId=" + patternId +
+                ", sectionIndex=" + sectionIndex +
+                ", stepIndex=" + stepIndex +
+                ", completed=" + completed +
+                '}';
+    }
 }
