@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SockPatternRequest;
 import se.appliedtechnology.backend.dto.UpdatePatternRequest;
+import se.appliedtechnology.backend.entity.Pattern;
 import se.appliedtechnology.backend.entity.PatternTemplate;
 import se.appliedtechnology.backend.service.PatternService;
 import se.appliedtechnology.backend.service.PatternGeneratorService;
@@ -27,14 +28,16 @@ public class PatternController {
     @PostMapping("/generate")
     public PatternResponse generatePattern(@RequestBody SockPatternRequest request) {
 
-       PatternResponse generatedPattern =  patternGeneratorService.generateSockPattern(request);
-        String name = request.name();
+       Pattern generatedPattern =  patternGeneratorService.generateSockPattern(request);
 
-       PatternResponse finalPattern = new PatternResponse(
-               name != null ? name : generatedPattern.name(),
-               generatedPattern.parameters(),
-               generatedPattern.sections());
-       patternService.savePattern("sock", 1, finalPattern);
+       Pattern saved = patternService.savePattern("sock", 1, generatedPattern);
+       PatternResponse finalPattern  = new PatternResponse(
+               saved.getId(),
+               saved.getName(),
+               saved.getParameters(),
+               saved.getStructure(),
+               saved.getNotes()
+       );
         return finalPattern;
     }
 

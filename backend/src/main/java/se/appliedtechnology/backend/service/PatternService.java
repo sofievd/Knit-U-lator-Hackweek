@@ -29,16 +29,16 @@ public class PatternService {
         this.progressRepository = progressRepository;
     }
 
-    public Pattern savePattern(String type, int patternVariantId, PatternResponse response) {
+    public Pattern savePattern(String type, int patternVariantId, Pattern response) {
         try {
             Pattern pattern = new Pattern();
 
-            pattern.setName(response.name());
+            pattern.setName(response.getName());
             pattern.setPatternType(type);
             pattern.setPatternVariantId(patternVariantId);
 
-            pattern.setParameters(response.parameters());
-            pattern.setStructure(response.sections());
+            pattern.setParameters(response.getParameters());
+            pattern.setStructure(response.getStructure());
 
             pattern.setCreatedAt(Instant.now());
 

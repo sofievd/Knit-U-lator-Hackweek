@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SectionDto;
 import se.appliedtechnology.backend.dto.SockPatternRequest;
+import se.appliedtechnology.backend.entity.Pattern;
 import se.appliedtechnology.backend.entity.PatternTemplate;
 import se.appliedtechnology.backend.repository.PatternTemplateRepository;
 
@@ -25,14 +26,19 @@ public class PatternGeneratorService {
         this.builder = builder;
     }
 
-    public PatternResponse generateSockPattern(SockPatternRequest request) {
+    public Pattern generateSockPattern(SockPatternRequest request) {
         List<PatternTemplate> templates = templateRepository.findByPatternTypeAndPatternVariantId("sock", 1);
 
-        Map<String, Object> params = parameterService.generateSock(request);
+        Map<String, Object> params = parameterService.generateSockParams(request);
 
         List<SectionDto> sections = builder.build(templates, params, renderer);
 
-        return new PatternResponse(request.name(), params, sections);
+        Pattern pattern= new Pattern();
+        pattern.setName(request.name());
+        pattern.setParameters(params);
+        pattern.setStructure(sections);
+        pattern.setNotes("");
+        return pattern;
 
 
     }

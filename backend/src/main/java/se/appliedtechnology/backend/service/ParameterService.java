@@ -11,7 +11,7 @@ public class ParameterService {
      private final int GAUCH_CM = 10;
      private final int GAUCHE_INCH = 4;
 
-    public Map<String, Object> generateSock(SockPatternRequest request) {
+    public Map<String, Object> generateSockParams(SockPatternRequest request) {
         double footCircumference = request.footCircumference();
         double stitchGauge = request.stitchGauge();
         double rowGauge = request.rowGauge();
