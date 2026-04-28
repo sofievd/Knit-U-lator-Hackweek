@@ -1,41 +1,14 @@
-import { useState, useEffect } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
-
-interface Pattern {
-  id: string;
-  name: string;
-  type: string;
-  patternType: string;
-  createdAt: string;
-  measurements: {
-    footLength: string;
-    footCircumference: string;
-    gauge: string;
-  };
-  currentRow?: number;
-}
+import { usePatterns } from "../util/queryOptions";
 
 export function PatternList() {
   const navigate = useNavigate();
-  const [patterns, setPatterns] = useState<Pattern[]>([]);
+  const { data: patterns = [], isLoading, error } = usePatterns();
 
-  useEffect(() => {
-    const savedPatterns = JSON.parse(localStorage.getItem("knit-patterns") || "[]");
-    setPatterns(savedPatterns);
-  }, []);
-
-  const getIcon = (type: string) => {
-    switch (type) {
-      case "socks":
-        return "🧦";
-      case "hats":
-        return "🧢";
-      case "scarves":
-        return "🧣";
-      default:
-        return "✨";
-    }
+  const getIcon = () => {
+    // Default icon for all patterns (the parameters might contain pattern type info)
+    return "✨";
   };
 
   return (
@@ -50,7 +23,18 @@ export function PatternList() {
         <h1 className="text-foreground">My Patterns</h1>
       </div>
 
-      {patterns.length === 0 ? (
+      {isLoading ? (
+        <div className="bg-card rounded-xl shadow-sm border border-border p-12 text-center">
+          <p className="text-muted-foreground">Loading your patterns...</p>
+        </div>
+      ) : error ? (
+        <div className="bg-card rounded-xl shadow-sm border border-border p-12 text-center space-y-4">
+          <p className="text-destructive">Failed to load patterns</p>
+          <p className="text-sm text-muted-foreground">
+            Please try refreshing the page
+          </p>
+        </div>
+      ) : patterns.length === 0 ? (
         <div className="bg-card rounded-xl shadow-sm border border-border p-12 text-center space-y-4">
           <p className="text-muted-foreground">No patterns yet</p>
           <Link
@@ -70,14 +54,14 @@ export function PatternList() {
               className="bg-card rounded-xl shadow-sm border border-border p-6 hover:shadow-md transition-all hover:border-primary/30 space-y-4 group"
             >
               <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center">
-                <span className="text-4xl">{getIcon(pattern.type)}</span>
+                <span className="text-4xl">{getIcon()}</span>
               </div>
               <div className="space-y-1">
                 <h3 className="text-foreground group-hover:text-primary transition-colors">
                   {pattern.name}
                 </h3>
-                <p className="text-sm text-muted-foreground capitalize">
-                  {pattern.patternType?.split("-").join(" ")} {pattern.type}
+                <p className="text-sm text-muted-foreground">
+                  Custom knitting pattern
                 </p>
               </div>
             </Link>

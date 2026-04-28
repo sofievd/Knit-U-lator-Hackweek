@@ -1,21 +1,22 @@
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "../util/useApi";
 import type { PatternResponse } from "../types";
 
 export function PatternInput() {
   const navigate = useNavigate();
   const { api } = useApi();
+  const queryClient = useQueryClient();
   const title = "Knit-U-Lator";
   const [formData, setFormData] = useState({
     footLength: "",
     footCircumference: "",
-  stitchGauge: "",
-  rowGauge : "",
-  needleCount: "4",
-  name: "My pattern"
+    stitchGauge: "",
+    rowGauge: "",
+    needleCount: "4",
+    name: "My pattern",
   });
 
   const createPatternMutation = useMutation({
@@ -31,7 +32,12 @@ export function PatternInput() {
           name: values.name,
         }),
       }),
-    onSuccess: (pattern) => {
+    onSuccess: async (pattern) => {
+      queryClient.setQueryData<PatternResponse[]>(["patterns"], (existing) => {
+        const current = existing ?? [];
+        return [pattern, ...current.filter((item) => item.id !== pattern.id)];
+      });
+      await queryClient.invalidateQueries({ queryKey: ["patterns"] });
       navigate({ to: `/patterns/${pattern.id}` });
     },
   });
@@ -50,7 +56,7 @@ export function PatternInput() {
 
       <div className="max-w-2xl mx-auto bg-card rounded-xl shadow-sm border border-border p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
-           <div className="space-y-2">
+          <div className="space-y-2">
             <label htmlFor="name" className="block text-foreground">
               Pattern Name
             </label>
@@ -123,8 +129,7 @@ export function PatternInput() {
               type="number"
               step="0.1"
               required
-              value={formData.stitchGauge
-              }
+              value={formData.stitchGauge}
               onChange={(e) =>
                 setFormData({
                   ...formData,
@@ -136,7 +141,7 @@ export function PatternInput() {
             />
           </div>
 
-           <div className="space-y-2">
+          <div className="space-y-2">
             <label htmlFor="rowGauge" className="block text-foreground">
               Gauge (rows per cm)
             </label>
@@ -156,7 +161,7 @@ export function PatternInput() {
               placeholder="24.0"
             />
           </div>
-           <div className="space-y-2">
+          <div className="space-y-2">
             <label htmlFor="needleCount" className="block text-foreground">
               number of needles (default 4)
             </label>

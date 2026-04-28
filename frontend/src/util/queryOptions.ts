@@ -1,5 +1,7 @@
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { useApi } from "./useApi";
+import { useAuth } from "@clerk/clerk-react";
+import type { PatternResponse } from "../types";
 
 export const patternQueries = {
   all: () => ["patterns"] as const,
@@ -22,5 +24,18 @@ export function createPatternDetailQuery(
   return queryOptions({
     queryKey: ["patterns", id],
     queryFn: () => api.api(`/patterns/${id}`),
+  });
+}
+
+// Hook to fetch all patterns for the currently authenticated user
+// Only fetches when user is signed in
+export function usePatterns() {
+  const api = useApi();
+  const { isSignedIn } = useAuth();
+
+  return useQuery<PatternResponse[]>({
+    queryKey: ["patterns"],
+    queryFn: async () => api.api("/patterns"),
+    enabled: isSignedIn,
   });
 }
