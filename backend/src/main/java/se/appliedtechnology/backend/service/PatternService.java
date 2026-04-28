@@ -60,6 +60,7 @@ public class PatternService {
 
     public List<PatternResponse> getAllFromUser(String userId) {
         List<Pattern> patternList = patternRepository.findAllByUserId(userId);
+        patternList.forEach(System.out::println);
         if (patternList == null) {
             throw new NoPatternFoundexception("patterns not found");
         }
@@ -113,6 +114,8 @@ public class PatternService {
                     p.setStepIndex(stepIndex);
                     return p;
                 });
+
+        System.out.println(progress);
 
         progress.setCompleted(!progress.isCompleted());
         progressRepository.save(progress);
