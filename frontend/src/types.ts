@@ -10,5 +10,6 @@ export type PatternSection = {
 }
 
 export type PatternResponse = {
+  id: string;
   sections: PatternSection[];
 };
