@@ -6,22 +6,22 @@ on:
     branches:
       - "main"
     paths:
-      - "../../backend"
+      - "/backend"
   pull_request:
     branches:
       - "main"
     paths:
-      - "../../backend"
+      - "/backend"
   workflow_dispatch:
 
-  jobs:
-    build-deploy:
-      runs-on ubuntu-latest
-    en:
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    env:
       IMAGE_URL: ${{ vars.GC_REGION }}-docker.pkg.dev/${{ vars.GC_PROJECT_ID }}/${{ vars.GC_REPO_NAME }}/${{ vars.GC_SERVICE_NAME_BE }}:${{ github.sha }}
     defaults:
       run:
-        working-directory: backend
+        working-directory: canine-cloud
 
     steps:
       - name: checkout
