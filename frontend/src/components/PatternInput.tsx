@@ -20,7 +20,7 @@ export function PatternInput() {
 
   const createPatternMutation = useMutation({
     mutationFn: (values: typeof formData) =>
-      api<PatternResponse>("/api/patterns/generate", {
+      api<PatternResponse>("/patterns/generate", {
         method: "POST",
         body: JSON.stringify({
           footLength: Number(values.footLength),
