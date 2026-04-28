@@ -15,7 +15,7 @@ export const createApiClient = (getToken: GetToken) => {
     };
 
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}${endpoint}`,
+      `${import.meta.env.VITE_API_URL}/api${endpoint}`,
       {
         ...options,
         headers,
