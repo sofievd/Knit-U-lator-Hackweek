@@ -3,9 +3,12 @@ package se.appliedtechnology.backend.service;
 import org.springframework.stereotype.Service;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SectionDto;
+import se.appliedtechnology.backend.dto.UpdatePatternRequest;
 import se.appliedtechnology.backend.entity.Pattern;
+import se.appliedtechnology.backend.entity.PatternProgress;
 import se.appliedtechnology.backend.exception.CouldNotSavePatternException;
 import se.appliedtechnology.backend.exception.NoPatternFoundexception;
+import se.appliedtechnology.backend.repository.PatternProgressRepository;
 import se.appliedtechnology.backend.repository.PatternRepository;
 import tools.jackson.databind.ObjectMapper;
 
@@ -20,11 +23,12 @@ import java.util.UUID;
 @Service
 public class PatternService {
     private final PatternRepository patternRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final PatternProgressRepository progressRepository;
 
 
-    public PatternService(PatternRepository patternRepository) {
+    public PatternService(PatternRepository patternRepository, PatternProgressRepository progressRepository) {
         this.patternRepository = patternRepository;
+        this.progressRepository = progressRepository;
     }
 
     public Pattern savePattern(String type, int patternVariantId, PatternResponse response) {
@@ -81,5 +85,29 @@ public class PatternService {
 
         patternRepository.delete(pattern);
     }
+
+    public PatternResponse update(UUID id, UpdatePatternRequest request){
+        Pattern pattern = patternRepository
+                .findById(id)
+                .orElseThrow(()->new NoPatternFoundexception("pattern not found"));
+
+        if(request.name() != null){
+            pattern.setName(request.name());
+        }
+//        if(request.notes() != null){
+//            pattern.setNotes(request.notes());
+//        }
+        Pattern saved = patternRepository.save(pattern);
+
+        Map<String, Object> params = pattern.getParameters();
+        List<SectionDto> sections = pattern.getStructure();
+
+        return new PatternResponse(
+                pattern.getName(),
+                params,
+                sections
+        );
+    }
+
 
 }

@@ -3,6 +3,7 @@ package se.appliedtechnology.backend.controller;
 import org.springframework.web.bind.annotation.*;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SockPatternRequest;
+import se.appliedtechnology.backend.dto.UpdatePatternRequest;
 import se.appliedtechnology.backend.entity.PatternTemplate;
 import se.appliedtechnology.backend.service.PatternService;
 import se.appliedtechnology.backend.service.PatternGeneratorService;
@@ -57,6 +58,12 @@ public class PatternController {
     public void deletePattern(@PathVariable String id){
         UUID uuid = UUID.fromString(id);
         patternService.deletePattern(uuid);
+    }
+
+    @PutMapping("/{id}")
+    public PatternResponse updatePattern(@PathVariable String id, @RequestBody UpdatePatternRequest request){
+        UUID uuid = UUID.fromString(id);
+        return patternService.update(uuid, request);
     }
 
 }
