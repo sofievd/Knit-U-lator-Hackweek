@@ -1,6 +1,5 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
-import react from 'react'
 
 interface PatternType {
   id: string;
@@ -11,11 +10,20 @@ interface PatternType {
 export default function PatternCategory() {
   const { type } = useParams({ strict: false });
   const navigate = useNavigate();
+  const isHatsCategory = type === "hats";
 
   const patternTypes: Record<string, PatternType[]> = {
     socks: [
-      { id: "basic", name: "Basic", description: "Simple, classic sock pattern" },
-      { id: "basic-variation", name: "Basic with Variation", description: "Classic with a twist" },
+      {
+        id: "basic",
+        name: "Basic",
+        description: "Simple, classic sock pattern",
+      },
+      {
+        id: "basic-variation",
+        name: "Basic with Variation",
+        description: "Classic with a twist",
+      },
       { id: "lace", name: "Lace", description: "Delicate lace pattern" },
     ],
     hats: [
@@ -31,7 +39,9 @@ export default function PatternCategory() {
   };
 
   const patterns = patternTypes[type as string] || [];
-  const title = type ? (type as string).charAt(0).toUpperCase() + (type as string).slice(1) : "Patterns";
+  const title = type
+    ? (type as string).charAt(0).toUpperCase() + (type as string).slice(1)
+    : "Patterns";
 
   return (
     <div className="space-y-8">
@@ -46,22 +56,42 @@ export default function PatternCategory() {
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {patterns.map((pattern) => (
-          <Link
-            key={pattern.id}
-            to="/create/$type/$pattern"
-            params={{ type: type as string, pattern: pattern.id }}
-            className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-all hover:border-primary/30 space-y-3 group"
-          >
-            <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center mb-4">
-              <span className="text-3xl">✨</span>
-            </div>
-            <h3 className="text-foreground group-hover:text-primary transition-colors">
-              {pattern.name}
-            </h3>
-            <p className="text-sm text-muted-foreground">{pattern.description}</p>
-          </Link>
-        ))}
+        {patterns.map((pattern) =>
+          isHatsCategory ? (
+            <Link
+              key={pattern.id}
+              to="/patterns/hats-input"
+              className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-all hover:border-primary/30 space-y-3 group"
+            >
+              <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center mb-4">
+                <span className="text-3xl">✨</span>
+              </div>
+              <h3 className="text-foreground group-hover:text-primary transition-colors">
+                {pattern.name}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {pattern.description}
+              </p>
+            </Link>
+          ) : (
+            <Link
+              key={pattern.id}
+              to="/create/$type/$pattern"
+              params={{ type: type as string, pattern: pattern.id }}
+              className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-all hover:border-primary/30 space-y-3 group"
+            >
+              <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center mb-4">
+                <span className="text-3xl">✨</span>
+              </div>
+              <h3 className="text-foreground group-hover:text-primary transition-colors">
+                {pattern.name}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {pattern.description}
+              </p>
+            </Link>
+          ),
+        )}
       </div>
     </div>
   );
