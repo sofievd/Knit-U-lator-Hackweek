@@ -16,4 +16,5 @@ export type PatternResponse = {
   parameters: Record<string, number>;
   sections: PatternSection[];
   notes: string | null;
+  isMock?: boolean;
 };

@@ -6,6 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import type { PatternResponse } from "../types";
 import { Edit, Save, Trash2 } from "lucide-react";
+import { getMockPatternById } from "../util/mockPatterns";
 
 export default function PatternViewPage() {
   const navigate = useNavigate();
@@ -14,7 +15,18 @@ export default function PatternViewPage() {
   const api = useApi();
   const { data: pattern } = useQuery<PatternResponse>({
     queryKey: ["patterns", id],
-    queryFn: async () => api.api(`/patterns/${id}`),
+    queryFn: async () => {
+      try {
+        return await api.api(`/patterns/${id}`);
+      } catch {
+        const mockPattern = getMockPatternById(id);
+        if (mockPattern) {
+          return mockPattern;
+        }
+
+        throw new Error(`Failed to load pattern ${id}`);
+      }
+    },
   });
 
   const [isEditingName, setIsEditingName] = useState(false);
@@ -158,8 +170,6 @@ export default function PatternViewPage() {
           </button>
         </div>
 
-   
-
         {!pattern?.sections ? (
           <div>Loading pattern...</div>
         ) : (
@@ -219,7 +229,7 @@ export default function PatternViewPage() {
           })
         )}
 
-             {/* Notes Section */}
+        {/* Notes Section */}
         <div className="border rounded-md p-4 bg-gray-50">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold">Notes</h3>
@@ -268,23 +278,23 @@ export default function PatternViewPage() {
           )}
         </div>
 
-         {/* Bottom Action Buttons */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
-        <button
-          onClick={savePattern}
-          className="flex items-center gap-2 bg-primary text-primary-foreground px-4 sm:px-6 py-3 rounded-lg hover:opacity-90 transition-opacity text-sm sm:text-base flex-1 sm:flex-initial justify-center"
-        >
-          <Save className="w-4 h-4" />
-          Save Pattern
-        </button>
-        <button
-          onClick={deletePattern}
-          className="flex items-center gap-2 px-4 sm:px-6 py-3 rounded-lg border border-destructive text-destructive hover:bg-destructive/10 transition-colors text-sm sm:text-base flex-1 sm:flex-initial justify-center"
-        >
-          <Trash2 className="w-4 h-4" />
-          Delete Pattern
-        </button>
-      </div>
+        {/* Bottom Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
+          <button
+            onClick={savePattern}
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 sm:px-6 py-3 rounded-lg hover:opacity-90 transition-opacity text-sm sm:text-base flex-1 sm:flex-initial justify-center"
+          >
+            <Save className="w-4 h-4" />
+            Save Pattern
+          </button>
+          <button
+            onClick={deletePattern}
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 rounded-lg border border-destructive text-destructive hover:bg-destructive/10 transition-colors text-sm sm:text-base flex-1 sm:flex-initial justify-center"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete Pattern
+          </button>
+        </div>
       </main>
     </div>
   );

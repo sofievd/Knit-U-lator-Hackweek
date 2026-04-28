@@ -2,6 +2,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { useApi } from "./useApi";
 import { useAuth } from "@clerk/clerk-react";
 import type { PatternResponse } from "../types";
+import { getMockPatterns } from "./mockPatterns";
 
 export const patternQueries = {
   all: () => ["patterns"] as const,
@@ -28,6 +29,7 @@ export function createPatternDetailQuery(
 }
 
 // Hook to fetch all patterns for the currently authenticated user
+// Merges real backend patterns with mock (hats) patterns from localStorage
 // Only fetches when user is signed in
 export function usePatterns() {
   const api = useApi();
@@ -35,7 +37,17 @@ export function usePatterns() {
 
   return useQuery<PatternResponse[]>({
     queryKey: ["patterns"],
-    queryFn: async () => api.api("/patterns"),
+    queryFn: async () => {
+      try {
+        const realPatterns = await api.api<PatternResponse[]>("/patterns");
+        const mockPatterns = getMockPatterns().map((p) => ({ ...p, isMock: true }));
+        return [...realPatterns, ...mockPatterns];
+      } catch {
+        // If backend fails, at least show mock patterns
+        const mockPatterns = getMockPatterns().map((p) => ({ ...p, isMock: true }));
+        return mockPatterns;
+      }
+    },
     enabled: isSignedIn,
   });
 }

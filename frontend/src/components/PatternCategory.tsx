@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, NotebookText } from "lucide-react";
 
 interface PatternType {
   id: string;
@@ -64,7 +64,7 @@ export default function PatternCategory() {
               className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-all hover:border-primary/30 space-y-3 group"
             >
               <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center mb-4">
-                <span className="text-3xl">✨</span>
+                <span className="text-3xl"><NotebookText /></span>
               </div>
               <h3 className="text-foreground group-hover:text-primary transition-colors">
                 {pattern.name}

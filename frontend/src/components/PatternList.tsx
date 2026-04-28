@@ -53,8 +53,15 @@ export function PatternList() {
               params={{ id: pattern.id }}
               className="bg-card rounded-xl shadow-sm border border-border p-6 hover:shadow-md transition-all hover:border-primary/30 space-y-4 group"
             >
-              <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center">
-                <span className="text-4xl">{getIcon()}</span>
+              <div className="flex items-start justify-between">
+                <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center">
+                  <span className="text-4xl">{getIcon()}</span>
+                </div>
+                {pattern.isMock && (
+                  <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded">
+                    Mock
+                  </span>
+                )}
               </div>
               <div className="space-y-1">
                 <h3 className="text-foreground group-hover:text-primary transition-colors">
