@@ -13,4 +13,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://dear-doe-86.clerk.accounts.dev
+          issuer-uri: ${CLERK_DOMAIN}
