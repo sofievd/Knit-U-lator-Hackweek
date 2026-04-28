@@ -34,9 +34,8 @@ public class PatternController {
     @PostMapping("/generate")
     public ResponseEntity<?> generatePattern(@RequestBody SockPatternRequest request, @AuthenticationPrincipal Jwt principal) {
 
-        System.out.println(principal.getId());
        Pattern generatedPattern =  patternGeneratorService.generateSockPattern(request);
-       generatedPattern.setUserId(principal.getId());
+       generatedPattern.setUserId(principal.getSubject());
 
        Pattern saved = patternService.savePattern("sock", 1, generatedPattern);
 
@@ -67,8 +66,7 @@ public class PatternController {
 
     @GetMapping
     public ResponseEntity<?> getAllPatterns(@AuthenticationPrincipal Jwt principal){
-        System.out.println(principal.getId());
-        List<PatternResponse> patterns = patternService.getAllFromUser(principal.getId());
+        List<PatternResponse> patterns = patternService.getAllFromUser(principal.getSubject());
         return ResponseEntity.ok().body(patterns);
     }
 
