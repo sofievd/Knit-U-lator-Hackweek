@@ -1,5 +1,5 @@
 package se.appliedtechnology.backend.dto;
 
-public record StepDto(String id, String text, String explanation) {
+public record StepDto(String id, String text, String explanation, boolean completed) {
 }
 
