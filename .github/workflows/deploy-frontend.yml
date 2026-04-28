@@ -40,7 +40,7 @@ jobs:
 
       - name: Docker Build
         run: docker build |
-          --build-arg VITE_B_API_URL="${{ vars.VITE__API_URL }}"  
+          --build-arg VITE_B_API_URL="${{ vars.VITE_API_URL }}"  
           --build-arg VITE_CLERK_PUBLISHABLE_KEY="${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}" --no-cache -t ${{ env.IMAGE_URL }} . -f Dockerfile
 
       - name: Docker Push
