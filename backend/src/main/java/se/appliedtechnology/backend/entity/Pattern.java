@@ -38,6 +38,9 @@ public class Pattern {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<SectionDto> structure;
 
+    @Column(columnDefinition = "text")
+    private String notes;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
@@ -115,5 +118,13 @@ public class Pattern {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

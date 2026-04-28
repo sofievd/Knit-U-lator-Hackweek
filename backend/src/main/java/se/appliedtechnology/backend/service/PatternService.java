@@ -97,9 +97,11 @@ public class PatternService {
             ));
         }
         return new PatternResponse(
+                pattern.getId(),
                 pattern.getName(),
                 params,
-                sections
+                sections,
+                pattern.getNotes()
         );
     }
 
@@ -108,7 +110,7 @@ public class PatternService {
         // todo: check if the list is empty
 
         return patternList.stream().map((p) ->
-                new PatternResponse(p.getName(), p.getParameters(), p.getStructure())
+                new PatternResponse(p.getId(), p.getName(), p.getParameters(), p.getStructure(), p.getNotes())
         ).toList();
     }
 
@@ -131,18 +133,21 @@ public class PatternService {
         if (request.name() != null) {
             pattern.setName(request.name());
         }
-//        if(request.notes() != null){
-//            pattern.setNotes(request.notes());
-//        }
+        if(request.notes() != null){
+            pattern.setNotes(request.notes());
+        }
         Pattern saved = patternRepository.save(pattern);
 
-        Map<String, Object> params = pattern.getParameters();
-        List<SectionDto> sections = pattern.getStructure();
+        Map<String, Object> params = saved.getParameters();
+        List<SectionDto> sections = saved.getStructure();
 
         return new PatternResponse(
-                pattern.getName(),
+                saved.getId(),
+                saved.getName(),
                 params,
-                sections
+                sections,
+                saved.getNotes()
+
         );
     }
 
