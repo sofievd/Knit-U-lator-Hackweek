@@ -22,6 +22,5 @@ export function createPatternDetailQuery(
   return queryOptions({
     queryKey: ["patterns", id],
     queryFn: () => api.api(`/patterns/${id}`),
-    enabled: api.isLoaded,
   });
 }
