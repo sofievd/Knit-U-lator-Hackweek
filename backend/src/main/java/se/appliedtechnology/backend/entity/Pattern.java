@@ -19,6 +19,7 @@ public class Pattern {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "user_id")
     private String userId;
 
     @Column(nullable = false)
@@ -126,5 +127,20 @@ public class Pattern {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public String toString() {
+        return "Pattern{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", name='" + name + '\'' +
+                ", patternType='" + patternType + '\'' +
+                ", patternVariantId=" + patternVariantId +
+                ", parameters=" + parameters +
+                ", structure=" + structure +
+                ", notes='" + notes + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

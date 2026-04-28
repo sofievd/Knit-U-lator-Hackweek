@@ -32,7 +32,7 @@ public class PatternService {
     public Pattern savePattern(String type, int patternVariantId, Pattern response) {
         try {
             Pattern pattern = new Pattern();
-
+            pattern.setUserId(response.getUserId());
             pattern.setName(response.getName());
             pattern.setPatternType(type);
             pattern.setPatternVariantId(patternVariantId);

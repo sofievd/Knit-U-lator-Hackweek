@@ -37,6 +37,7 @@ public class PatternController {
        generatedPattern.setUserId(principal.getId());
 
        Pattern saved = patternService.savePattern("sock", 1, generatedPattern);
+
        PatternResponse finalPattern  = new PatternResponse(
                saved.getId(),
                saved.getName(),
@@ -44,6 +45,7 @@ public class PatternController {
                saved.getStructure(),
                saved.getNotes()
        );
+
        URI uri = URI.create("/api/patterns/"+finalPattern.id());
         return ResponseEntity.created(uri).body(finalPattern);
     }
