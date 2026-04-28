@@ -3,6 +3,7 @@ import react from 'react'
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 
 const queryClient = new QueryClient(
     {
@@ -18,7 +19,8 @@ const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   scrollRestoration: true,
-  context: {queryClient},
+  context: {queryClient, 
+    auth: undefined as any},
 });
 
 declare module "@tanstack/react-router" {
@@ -29,11 +31,32 @@ declare module "@tanstack/react-router" {
 
 const rootElement = document.getElementById("app")!;
 
+const PUBLISHABLE_KEY=import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+function RouterWithAuth() {
+  const auth = useAuth();
+
+  return (
+    <RouterProvider
+      router={router}
+      context={{
+        queryClient,
+        auth,
+      }}
+    />
+  );
+}
+
+
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+    >
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <RouterWithAuth />
       </QueryClientProvider>
+    </ClerkProvider>
     );
 }

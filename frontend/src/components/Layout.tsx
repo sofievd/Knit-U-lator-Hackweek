@@ -1,6 +1,6 @@
 import { Outlet, Link } from "@tanstack/react-router";
-import { User, LogOut } from "lucide-react";
 import react from 'react'
+import { AuthButtons } from "./AuthButtons";
 
 export function Layout() {
   return (
@@ -17,13 +17,7 @@ export function Layout() {
             >
               My Patterns
             </Link>
-            <button className="flex items-center gap-2 text-foreground hover:text-primary transition-colors px-3 py-2 rounded-lg hover:bg-accent">
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
-            <button className="p-2 hover:bg-accent rounded-lg transition-colors">
-              <User className="w-5 h-5 text-foreground" />
-            </button>
+            <AuthButtons />
           </div>
         </div>
       </nav>

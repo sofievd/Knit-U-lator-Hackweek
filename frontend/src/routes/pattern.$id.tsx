@@ -1,22 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import react from 'react'
-import { useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
 import PatternView from '../components/PatternView'
-import { patternQueries } from '../util/queryOptions'
-
-const defaultSections: PatternSection[] = [
-  {
-    name: 'General',
-    steps: [
-      {
-        id: 'step-1',
-        text: 'No generated steps yet.',
-        explanation: 'Generate a pattern to see step-by-step instructions here.',
-      },
-    ],
-  },
-]
+import { createApiClient } from '../util/apiClient'
 
 export const Route = createFileRoute('/pattern/$id')({
 
@@ -25,8 +9,14 @@ export const Route = createFileRoute('/pattern/$id')({
 
   // 2. The Loader (Optional but recommended)
 // Access the queryClient we put in the context earlier (in main.tsx)
-  loader: ({ context: { queryClient }, params: { id } }) =>
-    queryClient.ensureQueryData(patternQueries.detail(id)),
+  loader: ({ context, params: { id } }) =>
+    context.queryClient.ensureQueryData({
+      queryKey: ['patterns', id],
+      queryFn: async () => {
+        const api = createApiClient((context as any).auth.getToken);
+        return api(`/patterns/${id}`);
+      },
+    }),
 
 
   // 3. Error State (Optional)

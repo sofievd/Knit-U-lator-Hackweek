@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
-import react from 'react'
 
 interface Pattern {
   id: string;
@@ -66,7 +65,7 @@ export function PatternList() {
           {patterns.map((pattern) => (
             <Link
               key={pattern.id}
-              to="/pattern/$id"
+              to="/patterns/$id"
               params={{ id: pattern.id }}
               className="bg-card rounded-xl shadow-sm border border-border p-6 hover:shadow-md transition-all hover:border-primary/30 space-y-4 group"
             >

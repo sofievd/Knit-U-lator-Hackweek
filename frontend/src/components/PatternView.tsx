@@ -1,6 +1,7 @@
 import { Route } from "../routes/pattern.$id";
 import {useQuery } from "@tanstack/react-query";
-import { patternQueries } from "../util/queryOptions";
+import { patternQueries, createPatternDetailQuery } from "../util/queryOptions";
+import { useApi } from "../util/useApi";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -8,7 +9,8 @@ export default function PatternViewPage() {
     const navigate = useNavigate()
   const { id } = Route.useParams()
 
-  const { data: pattern } = useQuery(patternQueries.detail(id))
+  const api = useApi();
+  const { data: pattern } = useQuery(createPatternDetailQuery(id, api));
   // 2. Local State
   const [patternName, setPatternName] = useState('My Pattern')
   const [currentRow, setCurrentRow] = useState(1)
