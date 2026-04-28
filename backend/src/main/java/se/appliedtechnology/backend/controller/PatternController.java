@@ -1,5 +1,6 @@
 package se.appliedtechnology.backend.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -12,6 +13,7 @@ import se.appliedtechnology.backend.entity.PatternTemplate;
 import se.appliedtechnology.backend.service.PatternService;
 import se.appliedtechnology.backend.service.PatternGeneratorService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,12 +31,10 @@ public class PatternController {
     }
 
     @PostMapping("/generate")
-    public PatternResponse generatePattern(@RequestBody SockPatternRequest request, @AuthenticationPrincipal Jwt principal) {
-
-
-        System.out.println(principal.getClaimAsString("name"));
+    public ResponseEntity<?> generatePattern(@RequestBody SockPatternRequest request, @AuthenticationPrincipal Jwt principal) {
 
        Pattern generatedPattern =  patternGeneratorService.generateSockPattern(request);
+       generatedPattern.setUserId(principal.getId());
 
        Pattern saved = patternService.savePattern("sock", 1, generatedPattern);
        PatternResponse finalPattern  = new PatternResponse(
@@ -44,44 +44,52 @@ public class PatternController {
                saved.getStructure(),
                saved.getNotes()
        );
-        return finalPattern;
+       URI uri = URI.create("/api/patterns/"+finalPattern.id());
+        return ResponseEntity.created(uri).body(finalPattern);
     }
 
-    @GetMapping("/template")
-    public List<PatternTemplate> getTemplate() {
-        return patternGeneratorService.getTemplate();
+    @GetMapping("/public/template")
+    public ResponseEntity<?> getTemplate() {
+        List<PatternTemplate> templates = patternGeneratorService.getTemplate();
+        return ResponseEntity.ok().body(templates);
     }
 
     @GetMapping("/{id}")
-    public PatternResponse getPattern(@PathVariable String id){
+    public ResponseEntity<?> getPattern(@PathVariable String id, @AuthenticationPrincipal Jwt principal){
         UUID uuid = UUID.fromString(id);
-       return patternService.getById(uuid);
+        PatternResponse response = patternService.getByIdAndUserID(uuid);
+       return ResponseEntity.ok().body(response);
     }
 
     @GetMapping
-    public List<PatternResponse> getAllPatterns(){
-        return patternService.getAll();
+    public ResponseEntity<?> getAllPatterns(@AuthenticationPrincipal Jwt principal){
+        List<PatternResponse> patterns =patternService.getAllFromUser(principal.getId());
+        return ResponseEntity.ok().body(patterns);
     }
 
     @DeleteMapping ("/{id}")
-    public void deletePattern(@PathVariable String id){
+    public ResponseEntity<?> deletePattern(@PathVariable String id,@AuthenticationPrincipal Jwt principal){
         UUID uuid = UUID.fromString(id);
-        patternService.deletePattern(uuid);
+        patternService.deletePatternFromUser(uuid);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public PatternResponse updatePattern(@PathVariable String id, @RequestBody UpdatePatternRequest request){
+    public ResponseEntity<?> updatePattern(@PathVariable String id, @RequestBody UpdatePatternRequest request, @AuthenticationPrincipal Jwt principal){
         UUID uuid = UUID.fromString(id);
-        return patternService.update(uuid, request);
+        PatternResponse updatedPattern = patternService.update(uuid, request);
+        return ResponseEntity.ok().body(updatedPattern);
     }
 
     @PostMapping("/{id}/steps/toggle")
-    public void toggleStep(
+    public ResponseEntity<?> toggleStep(
             @PathVariable UUID id,
             @RequestParam int sectionIndex,
-            @RequestParam int stepIndex
+            @RequestParam int stepIndex,
+            @AuthenticationPrincipal Jwt principal
     ) {
-        patternService.toggle(id, sectionIndex, stepIndex);
+        PatternResponse response = patternService.toggle(id, sectionIndex, stepIndex);
+        return ResponseEntity.ok().body(response);
     }
 
 }

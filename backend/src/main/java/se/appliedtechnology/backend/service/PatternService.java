@@ -3,7 +3,6 @@ package se.appliedtechnology.backend.service;
 import org.springframework.stereotype.Service;
 import se.appliedtechnology.backend.dto.PatternResponse;
 import se.appliedtechnology.backend.dto.SectionDto;
-import se.appliedtechnology.backend.dto.StepDto;
 import se.appliedtechnology.backend.dto.UpdatePatternRequest;
 import se.appliedtechnology.backend.entity.Pattern;
 import se.appliedtechnology.backend.entity.PatternProgress;
@@ -13,20 +12,21 @@ import se.appliedtechnology.backend.repository.PatternProgressRepository;
 import se.appliedtechnology.backend.repository.PatternRepository;
 
 import java.time.Instant;
-import java.util.*;
-
-// saving and updating patterns
-//TODO: rename patternService
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class PatternService {
     private final PatternRepository patternRepository;
     private final PatternProgressRepository progressRepository;
+    private final PatternResponseAssembler assembler;
 
 
-    public PatternService(PatternRepository patternRepository, PatternProgressRepository progressRepository) {
+    public PatternService(PatternRepository patternRepository, PatternProgressRepository progressRepository, PatternResponseAssembler assembler) {
         this.patternRepository = patternRepository;
         this.progressRepository = progressRepository;
+        this.assembler = assembler;
     }
 
     public Pattern savePattern(String type, int patternVariantId, Pattern response) {
@@ -49,72 +49,25 @@ public class PatternService {
         }
     }
 
-    public PatternResponse getById(UUID id) {
+    public PatternResponse getByIdAndUserID(UUID id) {
 
         Pattern pattern = patternRepository
                 .findById(id)
                 .orElseThrow(() -> new NoPatternFoundexception("pattern not found"));
 
-        List<PatternProgress> progressList = progressRepository.findByPatternId(id);
-
-        Map<String, Boolean> progressMap = new HashMap<>();
-
-        for (PatternProgress p : progressList) {
-            String key = p.getSectionIndex() + "-" + p.getStepIndex();
-            progressMap.put(key, p.isCompleted());
-        }
-
-        Map<String, Object> params = pattern.getParameters();
-        List<SectionDto> rawSections = pattern.getStructure();
-        List<SectionDto> sections = new ArrayList<>();
-
-        for (int sIndex = 0; sIndex < rawSections.size(); sIndex++) {
-
-            SectionDto rawSection = rawSections.get(sIndex);
-            List<StepDto> steps = new ArrayList<>();
-
-            for (int stepIndex = 0;
-                 stepIndex < rawSection.steps().size();
-                 stepIndex++) {
-
-                StepDto rawStep = rawSection.steps().get(stepIndex);
-                String key = sIndex + "-" + stepIndex;
-
-                boolean completed =
-                        progressMap.getOrDefault(key, false);
-
-                steps.add(new StepDto(
-                        rawStep.id(),
-                        rawStep.text(),
-                        rawStep.explanation(),
-                        completed
-                ));
-            }
-
-            sections.add(new SectionDto(
-                    rawSection.name(),
-                    steps
-            ));
-        }
-        return new PatternResponse(
-                pattern.getId(),
-                pattern.getName(),
-                params,
-                sections,
-                pattern.getNotes()
-        );
+        return assembler.toResponse(pattern);
     }
 
-    public List<PatternResponse> getAll() {
-        List<Pattern> patternList = patternRepository.findAll();
-        // todo: check if the list is empty
+    public List<PatternResponse> getAllFromUser(String userId) {
+        List<Pattern> patternList = patternRepository.findAllByUserId(userId);
+        if (patternList == null) {
+            throw new NoPatternFoundexception("patterns not found");
+        }
 
-        return patternList.stream().map((p) ->
-                new PatternResponse(p.getId(), p.getName(), p.getParameters(), p.getStructure(), p.getNotes())
-        ).toList();
+        return patternList.stream().map(assembler::toResponse).toList();
     }
 
-    public void deletePattern(UUID id) {
+    public void deletePatternFromUser(UUID id) {
         if (!patternRepository.existsById(id)) {
             throw new NoPatternFoundexception("pattern not found");
         }
@@ -133,7 +86,7 @@ public class PatternService {
         if (request.name() != null) {
             pattern.setName(request.name());
         }
-        if(request.notes() != null){
+        if (request.notes() != null) {
             pattern.setNotes(request.notes());
         }
         Pattern saved = patternRepository.save(pattern);
@@ -151,7 +104,7 @@ public class PatternService {
         );
     }
 
-    public void toggle(UUID id, int sectionIndex, int stepIndex) {
+    public PatternResponse toggle(UUID id, int sectionIndex, int stepIndex) {
         PatternProgress progress = progressRepository.findByPatternIdAndSectionIndexAndStepIndex(id, sectionIndex, stepIndex)
                 .orElseGet(() -> {
                     PatternProgress p = new PatternProgress();
@@ -163,6 +116,7 @@ public class PatternService {
 
         progress.setCompleted(!progress.isCompleted());
         progressRepository.save(progress);
+        return getByIdAndUserID(id);
     }
 
 
