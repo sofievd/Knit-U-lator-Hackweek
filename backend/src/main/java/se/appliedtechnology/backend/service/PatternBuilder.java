@@ -25,7 +25,9 @@ public class PatternBuilder {
             StepDto step = new StepDto(
                     String.valueOf(t.getStepOrder()),
                     renderer.renderTemplate(t.getTemplateText(), params),
-                    t.getExplanation());
+                    t.getExplanation(),
+                    false
+                    );
 
             groupedSteps.get(t.getSectionName()).add(step);
 

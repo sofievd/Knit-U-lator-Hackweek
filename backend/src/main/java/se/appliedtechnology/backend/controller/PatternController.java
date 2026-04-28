@@ -66,5 +66,14 @@ public class PatternController {
         return patternService.update(uuid, request);
     }
 
+    @PostMapping("/{id}/steps/toggle")
+    public void toggleStep(
+            @PathVariable UUID id,
+            @RequestParam int sectionIndex,
+            @RequestParam int stepIndex
+    ) {
+        patternService.toggle(id, sectionIndex, stepIndex);
+    }
+
 }
 
