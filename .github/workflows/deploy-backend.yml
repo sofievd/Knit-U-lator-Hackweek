@@ -21,7 +21,7 @@ jobs:
       IMAGE_URL: ${{ vars.GC_REGION }}-docker.pkg.dev/${{ vars.GC_PROJECT_ID }}/${{ vars.GC_REPO_NAME }}/${{ vars.GC_SERVICE_NAME_BE }}:${{ github.sha }}
     defaults:
       run:
-        working-directory: canine-cloud
+        working-directory: backend
 
     steps:
       - name: checkout
