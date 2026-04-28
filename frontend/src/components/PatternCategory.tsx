@@ -48,11 +48,20 @@ export default function PatternCategory() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate({ to: "/" })}
-          className="p-2 hover:bg-accent rounded-lg transition-colors"
+          className="p-2 rounded-lg transition-colors"
+          style={{ backgroundColor: "var(--accent)" }}
         >
-          <ChevronLeft className="w-5 h-5 text-foreground" />
+          <ChevronLeft
+            className="w-5 h-5"
+            style={{ color: "var(--foreground)" }}
+          />
         </button>
-        <h1 className="text-foreground">{title}</h1>
+        <h1
+          className="text-3xl font-semibold"
+          style={{ color: "var(--foreground)" }}
+        >
+          {title}
+        </h1>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
@@ -61,15 +70,30 @@ export default function PatternCategory() {
             <Link
               key={pattern.id}
               to="/patterns/hats-input"
-              className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-all hover:border-primary/30 space-y-3 group"
+              className="rounded-lg p-8 shadow-sm border hover:shadow-md transition-all space-y-3 group"
+              style={{
+                backgroundColor: "var(--card)",
+                borderColor: "var(--border)",
+              }}
             >
-              <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center mb-4">
-                <span className="text-3xl"><NotebookText /></span>
+              <div
+                className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
+                style={{ backgroundColor: "var(--accent)" }}
+              >
+                <span className="text-3xl">
+                  <NotebookText style={{ color: "var(--primary)" }} />
+                </span>
               </div>
-              <h3 className="text-foreground group-hover:text-primary transition-colors">
+              <h3
+                className="font-semibold transition-colors"
+                style={{ color: "var(--foreground)" }}
+              >
                 {pattern.name}
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p
+                className="text-sm"
+                style={{ color: "var(--muted-foreground)" }}
+              >
                 {pattern.description}
               </p>
             </Link>
@@ -78,15 +102,28 @@ export default function PatternCategory() {
               key={pattern.id}
               to="/create/$type/$pattern"
               params={{ type: type as string, pattern: pattern.id }}
-              className="bg-card rounded-xl p-8 shadow-sm border border-border hover:shadow-md transition-all hover:border-primary/30 space-y-3 group"
+              className="rounded-lg p-8 shadow-sm border hover:shadow-md transition-all space-y-3 group"
+              style={{
+                backgroundColor: "var(--card)",
+                borderColor: "var(--border)",
+              }}
             >
-              <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center mb-4">
+              <div
+                className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
+                style={{ backgroundColor: "var(--accent)" }}
+              >
                 <span className="text-3xl">✨</span>
               </div>
-              <h3 className="text-foreground group-hover:text-primary transition-colors">
+              <h3
+                className="font-semibold transition-colors"
+                style={{ color: "var(--foreground)" }}
+              >
                 {pattern.name}
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p
+                className="text-sm"
+                style={{ color: "var(--muted-foreground)" }}
+              >
                 {pattern.description}
               </p>
             </Link>

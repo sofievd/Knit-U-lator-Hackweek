@@ -40,11 +40,17 @@ export function usePatterns() {
     queryFn: async () => {
       try {
         const realPatterns = await api.api<PatternResponse[]>("/patterns");
-        const mockPatterns = getMockPatterns().map((p) => ({ ...p, isMock: true }));
+        const mockPatterns = getMockPatterns().map((p) => ({
+          ...p,
+          isMock: true,
+        }));
         return [...realPatterns, ...mockPatterns];
       } catch {
         // If backend fails, at least show mock patterns
-        const mockPatterns = getMockPatterns().map((p) => ({ ...p, isMock: true }));
+        const mockPatterns = getMockPatterns().map((p) => ({
+          ...p,
+          isMock: true,
+        }));
         return mockPatterns;
       }
     },

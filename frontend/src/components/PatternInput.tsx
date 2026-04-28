@@ -51,13 +51,25 @@ export function PatternInput() {
   return (
     <div>
       <div className="flex items-center gap-4 mb-8">
-        <h1 className="text-foreground capitalize">{title}</h1>
+        <h1
+          className="text-3xl font-semibold capitalize"
+          style={{ color: "var(--foreground)" }}
+        >
+          {title}
+        </h1>
       </div>
 
-      <div className="max-w-2xl mx-auto bg-card rounded-xl shadow-sm border border-border p-8">
+      <div
+        className="max-w-2xl mx-auto rounded-lg shadow-sm border p-8"
+        style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+      >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-foreground">
+            <label
+              htmlFor="name"
+              className="block font-semibold"
+              style={{ color: "var(--foreground)" }}
+            >
               Pattern Name
             </label>
             <input
@@ -71,12 +83,24 @@ export function PatternInput() {
                   name: e.target.value,
                 })
               }
-              className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
               placeholder="My pattern"
+              style={
+                {
+                  borderColor: "var(--border)",
+                  backgroundColor: "var(--card)",
+                  color: "var(--foreground)",
+                  "--tw-ring-color": "var(--primary)",
+                } as React.CSSProperties
+              }
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="footLength" className="block text-foreground">
+            <label
+              htmlFor="footLength"
+              className="block font-semibold"
+              style={{ color: "var(--foreground)" }}
+            >
               Foot Length (cm)
             </label>
             <input
@@ -91,15 +115,24 @@ export function PatternInput() {
                   footLength: e.target.value,
                 })
               }
-              className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
               placeholder="24.0"
+              style={
+                {
+                  borderColor: "var(--border)",
+                  backgroundColor: "var(--card)",
+                  color: "var(--foreground)",
+                  "--tw-ring-color": "var(--primary)",
+                } as React.CSSProperties
+              }
             />
           </div>
 
           <div className="space-y-2">
             <label
               htmlFor="footCircumference"
-              className="block text-foreground"
+              className="block font-semibold"
+              style={{ color: "var(--foreground)" }}
             >
               Foot Circumference (cm)
             </label>
@@ -115,13 +148,25 @@ export function PatternInput() {
                   footCircumference: e.target.value,
                 })
               }
-              className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
               placeholder="20.0"
+              style={
+                {
+                  borderColor: "var(--border)",
+                  backgroundColor: "var(--card)",
+                  color: "var(--foreground)",
+                  "--tw-ring-color": "var(--primary)",
+                } as React.CSSProperties
+              }
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="gauge" className="block text-foreground">
+            <label
+              htmlFor="gauge"
+              className="block font-semibold"
+              style={{ color: "var(--foreground)" }}
+            >
               Gauge (stitches per cm)
             </label>
             <input
@@ -136,13 +181,25 @@ export function PatternInput() {
                   stitchGauge: e.target.value,
                 })
               }
-              className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
               placeholder="3.0"
+              style={
+                {
+                  borderColor: "var(--border)",
+                  backgroundColor: "var(--card)",
+                  color: "var(--foreground)",
+                  "--tw-ring-color": "var(--primary)",
+                } as React.CSSProperties
+              }
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="rowGauge" className="block text-foreground">
+            <label
+              htmlFor="rowGauge"
+              className="block font-semibold"
+              style={{ color: "var(--foreground)" }}
+            >
               Gauge (rows per cm)
             </label>
             <input
@@ -157,12 +214,24 @@ export function PatternInput() {
                   rowGauge: e.target.value,
                 })
               }
-              className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
               placeholder="24.0"
+              style={
+                {
+                  borderColor: "var(--border)",
+                  backgroundColor: "var(--card)",
+                  color: "var(--foreground)",
+                  "--tw-ring-color": "var(--primary)",
+                } as React.CSSProperties
+              }
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="needleCount" className="block text-foreground">
+            <label
+              htmlFor="needleCount"
+              className="block font-semibold"
+              style={{ color: "var(--foreground)" }}
+            >
               number of needles (default 4)
             </label>
             <input
@@ -177,14 +246,26 @@ export function PatternInput() {
                   needleCount: e.target.value,
                 })
               }
-              className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
               placeholder="24.0"
+              style={
+                {
+                  borderColor: "var(--border)",
+                  backgroundColor: "var(--card)",
+                  color: "var(--foreground)",
+                  "--tw-ring-color": "var(--primary)",
+                } as React.CSSProperties
+              }
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-sm"
+            className="w-full px-6 py-3 rounded-lg hover:opacity-90 transition-opacity shadow-sm font-semibold"
+            style={{
+              backgroundColor: "var(--primary)",
+              color: "var(--primary-foreground)",
+            }}
           >
             Generate Pattern
           </button>
