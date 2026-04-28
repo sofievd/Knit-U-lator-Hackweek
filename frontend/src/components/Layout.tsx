@@ -8,7 +8,7 @@ export function Layout() {
       <nav className="border-b border-border bg-card">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="text-xl text-foreground hover:text-primary transition-colors">
-            KnitPattern
+            Knit-U-Lator
           </Link>
           <div className="flex items-center gap-4">
             <Link
