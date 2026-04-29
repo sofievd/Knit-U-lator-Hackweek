@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth, useClerk } from "@clerk/clerk-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import { ChevronLeft } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "../util/useApi";
 import type { PatternResponse } from "../types";
@@ -60,6 +61,7 @@ function clearStoredFormData() {
 
 export function PatternInput() {
   const navigate = useNavigate();
+  const params = useParams({ strict: false });
   const { isSignedIn } = useAuth();
   const { openSignIn } = useClerk();
   const { api } = useApi();
@@ -136,6 +138,23 @@ export function PatternInput() {
   return (
     <div>
       <div className="flex items-center gap-4 mb-8">
+        <button
+          onClick={() => {
+            if (window.history.length > 1) {
+              window.history.back();
+            } else {
+              const type = (params as any).type ?? "socks";
+              navigate({ to: "/category/$type", params: { type } });
+            }
+          }}
+          className="p-2 rounded-lg transition-colors"
+          style={{ backgroundColor: "var(--accent)" }}
+        >
+          <ChevronLeft
+            className="w-5 h-5"
+            style={{ color: "var(--foreground)" }}
+          />
+        </button>
         <h1
           className="text-3xl font-semibold capitalize"
           style={{ color: "var(--foreground)" }}
@@ -145,7 +164,7 @@ export function PatternInput() {
       </div>
 
       <div
-        className="max-w-2xl mx-auto rounded-lg shadow-sm border p-8"
+        className="max-w-2xl w-full rounded-lg shadow-sm border p-8"
         style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -192,7 +211,7 @@ export function PatternInput() {
               id="footLength"
               type="number"
               step="0.1"
-                min="0"
+              min="0"
               required
               value={formData.footLength}
               onChange={(e) =>
@@ -226,7 +245,7 @@ export function PatternInput() {
               id="footCircumference"
               type="number"
               step="0.1"
-                min="0"
+              min="0"
               required
               value={formData.footCircumference}
               onChange={(e) =>
@@ -260,7 +279,7 @@ export function PatternInput() {
               id="gauge"
               type="number"
               step="0.1"
-                min="0"
+              min="0"
               required
               value={formData.stitchGauge}
               onChange={(e) =>

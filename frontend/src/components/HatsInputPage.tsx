@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { ChevronLeft } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PatternResponse } from "../types";
 import { mockGenerateHatPattern } from "../util/mockPatterns";
@@ -42,8 +43,24 @@ export function HatsInputPage() {
   };
 
   return (
-    <div>
-      <div className="flex items-center gap-4 mb-8">
+    <div className="w-full">
+      <div className="flex items-center gap-4 mb-8 w-full">
+        <button
+          onClick={() => {
+            if (window.history.length > 1) {
+              window.history.back();
+            } else {
+              navigate({ to: "/category/$type", params: { type: "hats" } });
+            }
+          }}
+          className="p-2 rounded-lg transition-colors"
+          style={{ backgroundColor: "var(--accent)" }}
+        >
+          <ChevronLeft
+            className="w-5 h-5"
+            style={{ color: "var(--foreground)" }}
+          />
+        </button>
         <h1
           className="text-3xl font-semibold capitalize"
           style={{ color: "var(--foreground)" }}
@@ -64,7 +81,7 @@ export function HatsInputPage() {
       </div>
 
       <div
-        className="max-w-2xl mx-auto rounded-lg shadow-sm border p-8"
+        className="max-w-2xl w-full rounded-lg shadow-sm border p-8"
         style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
