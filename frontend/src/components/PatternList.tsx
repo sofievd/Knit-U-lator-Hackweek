@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { SignInButton, useAuth } from "@clerk/clerk-react";
 import { usePatterns } from "../util/queryOptions";
 
@@ -10,21 +10,26 @@ export function PatternList() {
 
   const getIcon = () => {
     // Default icon for all patterns (the parameters might contain pattern type info)
-    return "✨";
+    return  <Sparkles
+                            className="w-6 h-6"
+                            style={{ color: "var(--primary)" }}
+                          />;
   };
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center relative justify-center gap-4">
         <button
           onClick={() => navigate({ to: "/" })}
-          className="p-2 rounded-lg transition-colors"
+          className="p-2 w-fit rounded-lg transition-colors absolute left-0"
           style={{ backgroundColor: "var(--accent)" }}
         >
-          <ChevronLeft
+          <span className="flex gap-2 items-center"> <ArrowLeft
             className="w-5 h-5"
             style={{ color: "var(--foreground)" }}
-          />
+          /> 
+          Home</span>
+         
         </button>
         <h1
           className="text-3xl font-semibold"
@@ -32,6 +37,7 @@ export function PatternList() {
         >
           My Patterns
         </h1>
+       
       </div>
 
       {!isLoaded ? (
