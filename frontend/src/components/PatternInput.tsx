@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "../util/useApi";
 import type { PatternResponse } from "../types";
 
 export function PatternInput() {
   const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
+  const { openSignIn } = useClerk();
   const { api } = useApi();
   const queryClient = useQueryClient();
   const title = "Knit-U-Lator";
+  const [shouldGenerateAfterSignIn, setShouldGenerateAfterSignIn] =
+    useState(false);
   const [formData, setFormData] = useState({
     footLength: "",
     footCircumference: "",
@@ -33,6 +37,7 @@ export function PatternInput() {
         }),
       }),
     onSuccess: async (pattern) => {
+      setShouldGenerateAfterSignIn(false);
       queryClient.setQueryData<PatternResponse[]>(["patterns"], (existing) => {
         const current = existing ?? [];
         return [pattern, ...current.filter((item) => item.id !== pattern.id)];
@@ -40,10 +45,29 @@ export function PatternInput() {
       await queryClient.invalidateQueries({ queryKey: ["patterns"] });
       navigate({ to: `/patterns/${pattern.id}` });
     },
+    onError: (error) => {
+      if (error instanceof Error && error.message.includes("401")) {
+        setShouldGenerateAfterSignIn(true);
+        openSignIn();
+      }
+    },
   });
+
+  useEffect(() => {
+    if (isSignedIn && shouldGenerateAfterSignIn) {
+      setShouldGenerateAfterSignIn(false);
+      createPatternMutation.mutate(formData);
+    }
+  }, [createPatternMutation, formData, isSignedIn, shouldGenerateAfterSignIn]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isSignedIn) {
+      setShouldGenerateAfterSignIn(true);
+      openSignIn();
+      return;
+    }
 
     createPatternMutation.mutate(formData);
   };
@@ -267,7 +291,7 @@ export function PatternInput() {
               color: "var(--primary-foreground)",
             }}
           >
-            Generate Pattern
+            {isSignedIn ? "Generate Pattern" : "Sign in to generate pattern"}
           </button>
         </form>
       </div>
