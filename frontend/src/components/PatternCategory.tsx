@@ -116,6 +116,12 @@ export default function PatternCategory() {
               <Link
                 key={pattern.id}
                 to="/patterns/hats-input"
+                onClick={() => {
+                  sessionStorage.setItem(
+                    "knit-u-lator:selected-hat-pattern",
+                    JSON.stringify({ id: pattern.id, name: pattern.name, category: "hats" }),
+                  );
+                }}
                 className="rounded-lg p-8 shadow-sm border hover:shadow-md transition-all space-y-3 group"
                 style={{
                   backgroundColor: "var(--card)",

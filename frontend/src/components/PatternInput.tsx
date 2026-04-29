@@ -67,6 +67,16 @@ export function PatternInput() {
   const { api } = useApi();
   const queryClient = useQueryClient();
   const title = "Knit-U-Lator";
+
+  // Extract category and pattern for display
+  const categoryType = (params as any).type || "";
+  const patternId = (params as any).pattern || "";
+  const categoryLabel = categoryType
+    ? categoryType.slice(0, -1) // Remove trailing 's' (socks -> sock, hats -> hat, scarves -> scarf)
+    : "";
+  const displayText =
+    categoryLabel && patternId ? `${categoryLabel} pattern - ${patternId}` : "";
+
   const [shouldGenerateAfterSignIn, setShouldGenerateAfterSignIn] =
     useState(false);
   const [formData, setFormData] = useState(
@@ -155,12 +165,18 @@ export function PatternInput() {
             style={{ color: "var(--foreground)" }}
           />
         </button>
-        <h1
-          className="text-3xl font-semibold capitalize"
-          style={{ color: "var(--foreground)" }}
-        >
-          {title}
-        </h1>
+        <div className="flex-1">
+          
+          {patternId && (
+            <h1
+            className="text-3xl font-semibold capitalize"
+            style={{ color: "var(--foreground)" }}
+          >
+            {(params as any).pattern ? `Customize your ${displayText}` : title}
+           
+          </h1>
+          )}
+        </div>
       </div>
 
       <div

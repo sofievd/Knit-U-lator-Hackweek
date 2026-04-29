@@ -6,12 +6,33 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PatternResponse } from "../types";
 import { mockGenerateHatPattern } from "../util/mockPatterns";
 
+function loadSelectedHatPattern() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const stored = sessionStorage.getItem("knit-u-lator:selected-hat-pattern");
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(stored) as { id: string; name: string; category: string };
+  } catch {
+    return null;
+  }
+}
+
 export function HatsInputPage() {
   const navigate = useNavigate();
   const { isSignedIn } = useAuth();
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
   const title = "Knit-U-Lator";
+  const selectedPattern = loadSelectedHatPattern();
+  const displayText = selectedPattern
+    ? `hat pattern - ${selectedPattern.name}`
+    : "";
   const [shouldGenerateAfterSignIn, setShouldGenerateAfterSignIn] =
     useState(false);
   const [formData, setFormData] = useState({
@@ -80,23 +101,31 @@ export function HatsInputPage() {
             style={{ color: "var(--foreground)" }}
           />
         </button>
-        <h1
-          className="text-3xl font-semibold capitalize"
-          style={{ color: "var(--foreground)" }}
-        >
-          {title}
-        </h1>
-        <span
-          title="This is preview/mock data for hats — not final."
-          className="ml-2 inline-flex items-center text-xs px-2 py-0.5 rounded-full"
-          style={{
-            backgroundColor: "var(--secondary-background)",
-            color: "var(--foreground)",
-            opacity: 0.9,
-          }}
-        >
-          Preview
-        </span>
+        <div className="flex-1">
+          {selectedPattern && (
+            <div className="flex items-center gap-4 flex-wrap">
+              <h1
+                className="text-3xl font-semibold capitalize"
+                style={{ color: "var(--foreground)" }}
+              >
+                {selectedPattern.name
+                  ? `Customize your ${displayText}`
+                  : "Customize your hat pattern"}
+              </h1>
+              <span
+                title="This is preview/mock data for hats — not final."
+                className="inline-flex items-center text-xs px-2 py-0.5 rounded-full"
+                style={{
+                  backgroundColor: "var(--secondary-background)",
+                  color: "var(--foreground)",
+                  opacity: 0.9,
+                }}
+              >
+                Preview
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div
