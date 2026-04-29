@@ -20,7 +20,7 @@ export const Route = createFileRoute("/patterns/$id")({
             return mockPattern;
           }
 
-          throw new Error(`Failed to load pattern ${id}`);
+          throw new Error(`Failed to load pattern`);
         }
       },
     }),

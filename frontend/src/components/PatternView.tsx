@@ -156,12 +156,12 @@ export default function PatternViewPage() {
   return (
     <div className="p-4 sm:p-8">
       <header
-        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6"
+        className="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] items-center gap-4 mb-6"
         style={{ backgroundColor: "var(--background)" }}
       >
         <button
           onClick={() => navigate({ to: "/" })}
-          className="px-3 py-2 rounded-lg transition-colors font-semibold"
+          className="px-3 py-2 rounded-lg transition-colors font-semibold justify-self-start"
           style={{
             backgroundColor: "var(--accent)",
             color: "var(--foreground)",
@@ -174,7 +174,7 @@ export default function PatternViewPage() {
             type="text"
             value={patternName}
             onChange={(e) => setPatternName(e.target.value)}
-            className="text-2xl font-bold px-2 py-1 rounded border-b-2 focus:outline-none flex-1 sm:flex-initial"
+            className="text-2xl font-bold px-2 py-1 rounded border-b-2 focus:outline-none w-full max-w-xl justify-self-center text-center"
             style={{
               borderColor: "var(--primary)",
               backgroundColor: "var(--card)",
@@ -184,12 +184,18 @@ export default function PatternViewPage() {
           />
         ) : (
           <h1
-            className="text-2xl font-bold text-center"
+            className="text-2xl font-bold text-center justify-self-center"
             style={{ color: "var(--foreground)" }}
           >
             {pattern?.name ?? "Pattern"}
           </h1>
         )}
+        <div
+          aria-hidden="true"
+          className="hidden sm:block px-3 py-2 rounded-lg font-semibold invisible"
+        >
+          ← Back
+        </div>
       </header>
 
       {showAutoSavedNotice ? (
