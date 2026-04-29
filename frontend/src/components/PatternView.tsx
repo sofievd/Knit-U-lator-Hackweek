@@ -399,7 +399,7 @@ export default function PatternViewPage() {
             }}
           >
             <Save className="w-4 h-4" />
-            Save Pattern
+            Save
           </button>
           <button
             onClick={deletePattern}
@@ -411,7 +411,7 @@ export default function PatternViewPage() {
             }}
           >
             <Trash2 className="w-4 h-4" />
-            Delete Pattern
+            Delete
           </button>
         </div>
       </main>
