@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
+import { SignInButton, useAuth } from "@clerk/clerk-react";
 import { usePatterns } from "../util/queryOptions";
 
 export function PatternList() {
   const navigate = useNavigate();
+  const { isLoaded, isSignedIn } = useAuth();
   const { data: patterns = [], isLoading, error } = usePatterns();
 
   const getIcon = () => {
@@ -12,7 +14,6 @@ export function PatternList() {
   };
 
   return (
-    
     <div className="space-y-8">
       <div className="flex items-center gap-4">
         <button
@@ -33,7 +34,42 @@ export function PatternList() {
         </h1>
       </div>
 
-      {isLoading ? (
+      {!isLoaded ? (
+        <div
+          className="rounded-lg shadow-sm border p-12 text-center"
+          style={{
+            backgroundColor: "var(--card)",
+            borderColor: "var(--border)",
+          }}
+        >
+          <p style={{ color: "var(--muted-foreground)" }}>
+            Loading authentication...
+          </p>
+        </div>
+      ) : !isSignedIn ? (
+        <div
+          className="rounded-lg shadow-sm border p-12 text-center space-y-4"
+          style={{
+            backgroundColor: "var(--card)",
+            borderColor: "var(--border)",
+          }}
+        >
+          <p style={{ color: "var(--muted-foreground)" }}>
+            Sign in to see your patterns
+          </p>
+          <SignInButton mode="modal">
+            <button
+              className="inline-block px-6 py-3 rounded-lg hover:opacity-90 transition-opacity font-semibold"
+              style={{
+                backgroundColor: "var(--primary)",
+                color: "var(--primary-foreground)",
+              }}
+            >
+              Sign in
+            </button>
+          </SignInButton>
+        </div>
+      ) : isLoading ? (
         <div
           className="rounded-lg shadow-sm border p-12 text-center"
           style={{
