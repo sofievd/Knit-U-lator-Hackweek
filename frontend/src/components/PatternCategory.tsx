@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
-import { ChevronLeft, NotebookText, Sparkles } from "lucide-react";
+import { ChevronLeft, Sparkles, ArrowDown } from "lucide-react";
 
 interface PatternType {
   id: string;
@@ -63,7 +63,23 @@ export default function PatternCategory() {
         >
           {title}
         </h1>
+      
       </div>
+
+      {type && (
+        <div className="flex items-center gap-2">
+          <ArrowDown
+            className="w-4 h-4"
+            style={{ color: "var(--muted-foreground)" }}
+          />
+          <p
+            className="text-sm"
+            style={{ color: "var(--muted-foreground)" }}
+          >
+            Choose a pattern type for {title}
+          </p>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-3 gap-6">
         {patterns.map((pattern) => {
