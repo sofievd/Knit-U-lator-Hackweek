@@ -10,6 +10,7 @@ import java.util.Map;
 public class ParameterService {
      private final int GAUCH_CM = 10;
      private final int GAUCHE_INCH = 4;
+     private final int RIB_LENGHT = 5;
 
     public Map<String, Object> generateSockParams(SockPatternRequest request) {
         double footCircumference = request.footCircumference();
@@ -41,6 +42,7 @@ public class ParameterService {
         params.put("foot_lengt_cm", footLength);
         params.put("toe_repat_pairs", toeDecreaseRounds);
         params.put("final_stiches", finalStitches);
+        params.put("rib_length_cm", RIB_LENGHT);
 
         return params;
     }
