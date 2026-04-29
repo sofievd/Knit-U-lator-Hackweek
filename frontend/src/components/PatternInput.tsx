@@ -67,15 +67,16 @@ export function PatternInput() {
   const title = "Knit-U-Lator";
   const [shouldGenerateAfterSignIn, setShouldGenerateAfterSignIn] =
     useState(false);
-  const [formData, setFormData] = useState(() =>
-    loadStoredFormData() ?? {
-      footLength: "",
-      footCircumference: "",
-      stitchGauge: "",
-      rowGauge: "",
-      needleCount: "4",
-      name: "My pattern",
-    },
+  const [formData, setFormData] = useState(
+    () =>
+      loadStoredFormData() ?? {
+        footLength: "",
+        footCircumference: "",
+        stitchGauge: "",
+        rowGauge: "",
+        needleCount: "4",
+        name: "My pattern",
+      },
   );
 
   useEffect(() => {
