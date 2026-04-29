@@ -11,6 +11,7 @@ export default function PatternCategory() {
   const { type } = useParams({ strict: false });
   const navigate = useNavigate();
   const isHatsCategory = type === "hats";
+  const isScarvesCategory = type === "scarves";
 
   const patternTypes: Record<string, PatternType[]> = {
     socks: [
@@ -65,39 +66,87 @@ export default function PatternCategory() {
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {patterns.map((pattern) =>
-          isHatsCategory ? (
-            <Link
-              key={pattern.id}
-              to="/patterns/hats-input"
-              className="rounded-lg p-8 shadow-sm border hover:shadow-md transition-all space-y-3 group"
-              style={{
-                backgroundColor: "var(--card)",
-                borderColor: "var(--border)",
-              }}
-            >
+        {patterns.map((pattern) => {
+          if (isScarvesCategory) {
+            return (
               <div
-                className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
-                style={{ backgroundColor: "var(--accent)" }}
+                key={pattern.id}
+                aria-disabled="true"
+                className="rounded-lg p-8 shadow-sm border space-y-3 group cursor-not-allowed opacity-60"
+                style={{
+                  backgroundColor: "var(--card)",
+                  borderColor: "var(--border)",
+                }}
               >
-                <span className="text-3xl">
-                  <NotebookText style={{ color: "var(--primary)" }} />
-                </span>
+                <div className="flex items-start justify-between gap-3">
+                  <div
+                    className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
+                    style={{ backgroundColor: "var(--accent)" }}
+                  >
+                    <span className="text-3xl">✨</span>
+                  </div>
+                  <span
+                    className="px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap"
+                    style={{
+                      backgroundColor: "var(--secondary-background)",
+                      color: "var(--muted-foreground)",
+                    }}
+                  >
+                    Coming soon
+                  </span>
+                </div>
+                <h3
+                  className="font-semibold transition-colors"
+                  style={{ color: "var(--foreground)" }}
+                >
+                  {pattern.name}
+                </h3>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--muted-foreground)" }}
+                >
+                  {pattern.description}
+                </p>
               </div>
-              <h3
-                className="font-semibold transition-colors"
-                style={{ color: "var(--foreground)" }}
+            );
+          }
+
+          if (isHatsCategory) {
+            return (
+              <Link
+                key={pattern.id}
+                to="/patterns/hats-input"
+                className="rounded-lg p-8 shadow-sm border hover:shadow-md transition-all space-y-3 group"
+                style={{
+                  backgroundColor: "var(--card)",
+                  borderColor: "var(--border)",
+                }}
               >
-                {pattern.name}
-              </h3>
-              <p
-                className="text-sm"
-                style={{ color: "var(--muted-foreground)" }}
-              >
-                {pattern.description}
-              </p>
-            </Link>
-          ) : (
+                <div
+                  className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
+                  style={{ backgroundColor: "var(--accent)" }}
+                >
+                  <span className="text-3xl">
+                    <NotebookText style={{ color: "var(--primary)" }} />
+                  </span>
+                </div>
+                <h3
+                  className="font-semibold transition-colors"
+                  style={{ color: "var(--foreground)" }}
+                >
+                  {pattern.name}
+                </h3>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--muted-foreground)" }}
+                >
+                  {pattern.description}
+                </p>
+              </Link>
+            );
+          }
+
+          return (
             <Link
               key={pattern.id}
               to="/create/$type/$pattern"
@@ -127,8 +176,8 @@ export default function PatternCategory() {
                 {pattern.description}
               </p>
             </Link>
-          ),
-        )}
+          );
+        })}
       </div>
     </div>
   );
