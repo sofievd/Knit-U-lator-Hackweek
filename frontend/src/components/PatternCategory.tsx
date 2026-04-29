@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
-import { ChevronLeft, NotebookText } from "lucide-react";
+import { ChevronLeft, NotebookText, Sparkles } from "lucide-react";
 
 interface PatternType {
   id: string;
@@ -83,7 +83,13 @@ export default function PatternCategory() {
                     className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
                     style={{ backgroundColor: "var(--accent)" }}
                   >
-                    <span className="text-3xl">✨</span>
+                    <span className="text-3xl">
+                      {" "}
+                      <Sparkles
+                        className="w-6 h-6"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </span>
                   </div>
                   <span
                     className="px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap"
@@ -119,7 +125,11 @@ export default function PatternCategory() {
                 onClick={() => {
                   sessionStorage.setItem(
                     "knit-u-lator:selected-hat-pattern",
-                    JSON.stringify({ id: pattern.id, name: pattern.name, category: "hats" }),
+                    JSON.stringify({
+                      id: pattern.id,
+                      name: pattern.name,
+                      category: "hats",
+                    }),
                   );
                 }}
                 className="rounded-lg p-8 shadow-sm border hover:shadow-md transition-all space-y-3 group"
@@ -133,7 +143,10 @@ export default function PatternCategory() {
                   style={{ backgroundColor: "var(--accent)" }}
                 >
                   <span className="text-3xl">
-                    <NotebookText style={{ color: "var(--primary)" }} />
+                      <Sparkles
+                    className="w-6 h-6"
+                    style={{ color: "var(--primary)" }}
+                  />
                   </span>
                 </div>
                 <h3
@@ -167,7 +180,13 @@ export default function PatternCategory() {
                 className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
                 style={{ backgroundColor: "var(--accent)" }}
               >
-                <span className="text-3xl">✨</span>
+                <span className="text-3xl">
+                  {" "}
+                  <Sparkles
+                    className="w-6 h-6"
+                    style={{ color: "var(--primary)" }}
+                  />
+                </span>
               </div>
               <h3
                 className="font-semibold transition-colors"
