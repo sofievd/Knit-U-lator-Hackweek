@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,8 +8,12 @@ import { mockGenerateHatPattern } from "../util/mockPatterns";
 
 export function HatsInputPage() {
   const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
+  const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
   const title = "Knit-U-Lator";
+  const [shouldGenerateAfterSignIn, setShouldGenerateAfterSignIn] =
+    useState(false);
   const [formData, setFormData] = useState({
     name: "My hat pattern",
     headCircumference: "",
@@ -27,6 +32,7 @@ export function HatsInputPage() {
         fitType: values.fitType,
       }),
     onSuccess: async (pattern) => {
+      setShouldGenerateAfterSignIn(false);
       queryClient.setQueryData<PatternResponse[]>(["patterns"], (existing) => {
         const current = existing ?? [];
         return [pattern, ...current.filter((item) => item.id !== pattern.id)];
@@ -36,8 +42,21 @@ export function HatsInputPage() {
     },
   });
 
+  useEffect(() => {
+    if (isSignedIn && shouldGenerateAfterSignIn) {
+      setShouldGenerateAfterSignIn(false);
+      createPatternMutation.mutate(formData);
+    }
+  }, [createPatternMutation, formData, isSignedIn, shouldGenerateAfterSignIn]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isSignedIn) {
+      setShouldGenerateAfterSignIn(true);
+      openSignIn();
+      return;
+    }
 
     createPatternMutation.mutate(formData);
   };
@@ -259,7 +278,7 @@ export function HatsInputPage() {
               color: "var(--primary-foreground)",
             }}
           >
-            Generate Pattern
+            {isSignedIn ? "Generate Pattern" : "Sign in to generate pattern"}
           </button>
         </form>
       </div>
