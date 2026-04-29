@@ -24,11 +24,15 @@ export function Home() {
     <div className="space-y-16">
       <div>
         <h1
-          className="text-4xl font-semibold mb-8"
+          className="text-4xl font-semibold mb-8 text-center"
           style={{ color: "var(--foreground)" }}
         >
-          Home
+          Create your custom pattern
         </h1>
+
+        <p className="p-4 text-center m-6">
+          Choose a category below to get started. Customize it with your measurements and generate a pattern tailored just for you.
+        </p>
 
         <div className="grid md:grid-cols-3 gap-6">
           {categories.map((category) => (
@@ -84,11 +88,10 @@ export function Home() {
               className="font-semibold"
               style={{ color: "var(--foreground)" }}
             >
-              Enter Your Measurements
+              Choose & customize
             </h3>
             <p style={{ color: "var(--muted-foreground)" }}>
-              Input your measurements to get started with a custom pattern.
-            </p>
+              Pick a pattern and enter your measurements to tailor it to you.    </p>
           </div>
 
           <div
@@ -111,10 +114,10 @@ export function Home() {
               className="font-semibold"
               style={{ color: "var(--foreground)" }}
             >
-              We Generate a Custom Pattern
+              Generate your pattern
             </h3>
             <p style={{ color: "var(--muted-foreground)" }}>
-              Our algorithm creates a pattern tailored to your specifications.
+              We create your custom pattern instantly based on your input.
             </p>
           </div>
 
@@ -135,10 +138,10 @@ export function Home() {
               className="font-semibold"
               style={{ color: "var(--foreground)" }}
             >
-              Save, View, and Track Progress
+              Save & access anytime
             </h3>
             <p style={{ color: "var(--muted-foreground)" }}>
-              Save your patterns and track your progress as you knit.
+              Sign in to save your patterns and access them anytime you want to knit.
             </p>
           </div>
         </div>
