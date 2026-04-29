@@ -5,6 +5,59 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "../util/useApi";
 import type { PatternResponse } from "../types";
 
+const PATTERN_FORM_STORAGE_KEY = "knit-u-lator:pattern-form";
+
+function loadStoredFormData() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const storedValue = window.sessionStorage.getItem(PATTERN_FORM_STORAGE_KEY);
+
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedValue) as {
+      footLength: string;
+      footCircumference: string;
+      stitchGauge: string;
+      rowGauge: string;
+      needleCount: string;
+      name: string;
+    };
+  } catch {
+    return null;
+  }
+}
+
+function saveStoredFormData(formData: {
+  footLength: string;
+  footCircumference: string;
+  stitchGauge: string;
+  rowGauge: string;
+  needleCount: string;
+  name: string;
+}) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.sessionStorage.setItem(
+    PATTERN_FORM_STORAGE_KEY,
+    JSON.stringify(formData),
+  );
+}
+
+function clearStoredFormData() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.sessionStorage.removeItem(PATTERN_FORM_STORAGE_KEY);
+}
+
 export function PatternInput() {
   const navigate = useNavigate();
   const { isSignedIn } = useAuth();
@@ -14,14 +67,20 @@ export function PatternInput() {
   const title = "Knit-U-Lator";
   const [shouldGenerateAfterSignIn, setShouldGenerateAfterSignIn] =
     useState(false);
-  const [formData, setFormData] = useState({
-    footLength: "",
-    footCircumference: "",
-    stitchGauge: "",
-    rowGauge: "",
-    needleCount: "4",
-    name: "My pattern",
-  });
+  const [formData, setFormData] = useState(() =>
+    loadStoredFormData() ?? {
+      footLength: "",
+      footCircumference: "",
+      stitchGauge: "",
+      rowGauge: "",
+      needleCount: "4",
+      name: "My pattern",
+    },
+  );
+
+  useEffect(() => {
+    saveStoredFormData(formData);
+  }, [formData]);
 
   const createPatternMutation = useMutation({
     mutationFn: (values: typeof formData) =>
@@ -38,6 +97,7 @@ export function PatternInput() {
       }),
     onSuccess: async (pattern) => {
       setShouldGenerateAfterSignIn(false);
+      clearStoredFormData();
       queryClient.setQueryData<PatternResponse[]>(["patterns"], (existing) => {
         const current = existing ?? [];
         return [pattern, ...current.filter((item) => item.id !== pattern.id)];
