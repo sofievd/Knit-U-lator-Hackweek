@@ -5,8 +5,10 @@ import { useApi } from "../util/useApi";
 import { useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import type { PatternResponse } from "../types";
-import { Edit, Save, Trash2 } from "lucide-react";
+import { CheckCircle2, Edit, Save, Trash2 } from "lucide-react";
 import { getMockPatternById } from "../util/mockPatterns";
+
+const AUTO_SAVED_PATTERN_STORAGE_KEY = "knit-u-lator:auto-saved-pattern";
 
 export default function PatternViewPage() {
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ export default function PatternViewPage() {
   const [patternName, setPatternName] = useState(pattern?.name ?? "");
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(pattern?.notes ?? "");
+  const [showAutoSavedNotice, setShowAutoSavedNotice] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -127,6 +130,29 @@ export default function PatternViewPage() {
     }
   }, [pattern?.notes]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const stored = window.sessionStorage.getItem(
+      AUTO_SAVED_PATTERN_STORAGE_KEY,
+    );
+    if (!stored) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(stored) as { id?: string };
+      if (parsed.id === id) {
+        setShowAutoSavedNotice(true);
+        window.sessionStorage.removeItem(AUTO_SAVED_PATTERN_STORAGE_KEY);
+      }
+    } catch {
+      window.sessionStorage.removeItem(AUTO_SAVED_PATTERN_STORAGE_KEY);
+    }
+  }, [id]);
+
   return (
     <div className="p-4 sm:p-8">
       <header
@@ -158,16 +184,35 @@ export default function PatternViewPage() {
           />
         ) : (
           <h1
-            className="text-2xl font-bold"
+            className="text-2xl font-bold text-center"
             style={{ color: "var(--foreground)" }}
           >
             {pattern?.name ?? "Pattern"}
           </h1>
         )}
-        <div className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-          ID: {pattern?.id ?? id}
-        </div>
       </header>
+
+      {showAutoSavedNotice ? (
+        <div
+          className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border px-3 py-2 text-sm"
+          style={{
+            borderColor: "var(--primary)",
+            backgroundColor: "var(--accent)",
+            color: "var(--primary)",
+          }}
+        >
+          <CheckCircle2 className="h-4 w-4" />
+          <span>Automatically saved to your patterns.</span>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/my-patterns" })}
+            className="ml-auto font-semibold underline underline-offset-2 hover:opacity-80"
+            style={{ color: "var(--primary)" }}
+          >
+            View in My Patterns
+          </button>
+        </div>
+      ) : null}
 
       <main
         className="rounded-lg p-6 space-y-6 shadow-sm border"

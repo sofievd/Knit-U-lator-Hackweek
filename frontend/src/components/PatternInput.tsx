@@ -7,6 +7,7 @@ import { useApi } from "../util/useApi";
 import type { PatternResponse } from "../types";
 
 const PATTERN_FORM_STORAGE_KEY = "knit-u-lator:pattern-form";
+const AUTO_SAVED_PATTERN_STORAGE_KEY = "knit-u-lator:auto-saved-pattern";
 
 function loadStoredFormData() {
   if (typeof window === "undefined") {
@@ -111,6 +112,12 @@ export function PatternInput() {
     onSuccess: async (pattern) => {
       setShouldGenerateAfterSignIn(false);
       clearStoredFormData();
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem(
+          AUTO_SAVED_PATTERN_STORAGE_KEY,
+          JSON.stringify({ id: pattern.id, timestamp: Date.now() }),
+        );
+      }
       queryClient.setQueryData<PatternResponse[]>(["patterns"], (existing) => {
         const current = existing ?? [];
         return [pattern, ...current.filter((item) => item.id !== pattern.id)];

@@ -6,6 +6,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PatternResponse } from "../types";
 import { mockGenerateHatPattern } from "../util/mockPatterns";
 
+const AUTO_SAVED_PATTERN_STORAGE_KEY = "knit-u-lator:auto-saved-pattern";
+
 function loadSelectedHatPattern() {
   if (typeof window === "undefined") {
     return null;
@@ -28,7 +30,6 @@ export function HatsInputPage() {
   const { isSignedIn } = useAuth();
   const { openSignIn } = useClerk();
   const queryClient = useQueryClient();
-  const title = "Knit-U-Lator";
   const selectedPattern = loadSelectedHatPattern();
   const displayText = selectedPattern
     ? `hat pattern - ${selectedPattern.name}`
@@ -54,6 +55,12 @@ export function HatsInputPage() {
       }),
     onSuccess: async (pattern) => {
       setShouldGenerateAfterSignIn(false);
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem(
+          AUTO_SAVED_PATTERN_STORAGE_KEY,
+          JSON.stringify({ id: pattern.id, timestamp: Date.now() }),
+        );
+      }
       queryClient.setQueryData<PatternResponse[]>(["patterns"], (existing) => {
         const current = existing ?? [];
         return [pattern, ...current.filter((item) => item.id !== pattern.id)];
