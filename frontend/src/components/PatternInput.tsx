@@ -192,6 +192,7 @@ export function PatternInput() {
               id="footLength"
               type="number"
               step="0.1"
+                min="0"
               required
               value={formData.footLength}
               onChange={(e) =>
@@ -225,6 +226,7 @@ export function PatternInput() {
               id="footCircumference"
               type="number"
               step="0.1"
+                min="0"
               required
               value={formData.footCircumference}
               onChange={(e) =>
@@ -252,12 +254,13 @@ export function PatternInput() {
               className="block font-semibold"
               style={{ color: "var(--foreground)" }}
             >
-              Gauge (stitches per cm)
+              Gauge (stitches per 10cm)
             </label>
             <input
               id="gauge"
               type="number"
               step="0.1"
+                min="0"
               required
               value={formData.stitchGauge}
               onChange={(e) =>
@@ -285,12 +288,13 @@ export function PatternInput() {
               className="block font-semibold"
               style={{ color: "var(--foreground)" }}
             >
-              Gauge (rows per cm)
+              Gauge (rows per 10cm)
             </label>
             <input
               id="rowGauge"
               type="number"
               step="0.1"
+              min="0"
               required
               value={formData.rowGauge}
               onChange={(e) =>
@@ -323,6 +327,7 @@ export function PatternInput() {
               id="needleCount"
               type="number"
               step="0.1"
+              min="2"
               required
               value={formData.needleCount}
               onChange={(e) =>

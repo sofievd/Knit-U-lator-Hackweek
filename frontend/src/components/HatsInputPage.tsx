@@ -101,6 +101,7 @@ export function HatsInputPage() {
               id="headCircumference"
               type="number"
               step="0.1"
+              min="0"
               required
               value={formData.headCircumference}
               onChange={(e) =>
@@ -134,6 +135,7 @@ export function HatsInputPage() {
               id="gauge"
               type="number"
               step="0.1"
+              min="0"
               required
               value={formData.gauge}
               onChange={(e) =>
@@ -167,6 +169,7 @@ export function HatsInputPage() {
               id="hatHeight"
               type="number"
               step="0.1"
+              min="0"
               value={formData.hatHeight}
               onChange={(e) =>
                 setFormData({
