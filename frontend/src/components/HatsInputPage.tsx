@@ -50,6 +50,17 @@ export function HatsInputPage() {
         >
           {title}
         </h1>
+        <span
+          title="This is preview/mock data for hats — not final."
+          className="ml-2 inline-flex items-center text-xs px-2 py-0.5 rounded-full"
+          style={{
+            backgroundColor: "var(--secondary-background)",
+            color: "var(--foreground)",
+            opacity: 0.9,
+          }}
+        >
+          Preview
+        </span>
       </div>
 
       <div
